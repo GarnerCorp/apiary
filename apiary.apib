@@ -1,0 +1,689 @@
+FORMAT: 1A
+HOST: https://test.globalcontroltower.com/gct/restful/
+
+# Global Control Tower (GCT) API
+
+The Global Control Tower API is designed for freight forwarders and vendors to provide updates 
+to purchase order shipment data in Global Control Tower (GCT) system. 
+
+Authentication
+--------------
+The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request. 
+See more info about HTTP Basic here: https://github.com/vmandrychenko/http-api-guidelines#http-basic
+
+Trace ID
+--------
+Each response will come with generated TraceId. This UUID will be generated on every API invocation and will be logged as request flows through processing chain. 
+TraceId will be used to troubleshoot requests/responses on the client and server sides. 
+
+Content negotiation
+-------------------
+`Accept` header allows client to request the preferred media type that server will return in the response. 
+`Content-Type` header in the response represents the media type of the content.
+
+If you would like to use light weight form of content negotiation for simplicity purposes, use `Accept: application/json` header,
+which will communicate to the application that you accept default media types in `json` format. This is recommended approach at the moment.
+
+If you would like to skip content negotiation and skip `Accept` header, some of the responses will 
+be returned in `text/html` format (`Content-Type: text/html`). One example of this is "Authentication error", 
+which results in Login page in the response (`Content-Type: text/html`) instead of errors listed in `json` format (`Content-Type: application/vnd.garnercorp.errors+json;v=1.0`).
+
+
+Media types
+-----------
+API content type is communicated through vendor media types: `application/vnd.garnercorp.someresourcename+json;v=1.0`. 
+Use `Accept: application/json` to accept all media types in `json` format without being specific.
+Use `Accept: application/vnd.garnercorp.someresourcename+json;v=1.0` header to indicate the specific accepted media type. This is applicable for versioning.
+
+API versioning
+--------------
+This section becomes applicable once we get into scenarios where we have more than one version of the same resource available in the response. As of May 18, 2017 this is not the case yet.
+
+API/resource versioning will be handled through content negotiation using custom media types that is communicated via `Accept` and `Content-Type` headers. 
+One of the examples of a shipment media type: `application/vnd.garnercorp.shipment+json;v=1.0`. Note media type parameter: `v=1.0`
+Minor and major version numbers are incremented for the backwards incompatible updates performed to API/resources. This should be a very rare case.
+Minor version is incremented during minor updates and major version is incremented during major updates.
+
+In case of the same media type represented as 2 separate versions, content negotiation can be used to request a specific version of the media. 
+Example of `Accept` headers for errors resource in this case would be:
+`Accept: application/vnd.garnercorp.errors+json;v=1.0`
+or
+`Accept: application/vnd.garnercorp.errors+json;v=2.0`
+
+As of May 18, 2017, there is only 1 media type that is returned (`application/vnd.garnercorp.errors+json;v=1.0`). 
+We will make API updates once this changes and will inform users via email.
+
+Encoding
+--------
+Json payload should have a standard JavaScript encoding which is UTF-8.
+
+Mandatory fields
+----------------
+Mandatory fields will be marked "|mandatory|" in the examples provided.
+For all optional string fields omitting the key/value line or sending value as ""(empty string), the value 
+will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
+and send the key along with ""(empty string) so that troubleshooting is easier on both sides.
+
+
+Status Dates
+------------
+
+Status/event dates and estimated dates should be the date of the event at the local time where it occurs. 
+
+Historical Data
+===============
+If you need to provide historical data dump it can be done through API:
+* Iterate through every item in the data dump and make HTTP calls to the API
+* For every shipment make a call to Shipment API sending all the POs + lines that are on that shipment. For convenience all status updates for every line can be done separately through Update PO Line API that contain Vendor and Packer statuses in addition to Freight Forwarder statuses. 
+* Do not make parallel HTTP requests to avoid server overload and to ensure data consistency if there is interdepency between the calls.
+* Log all the non 2XX responses for troubleshooting purposes.
+
+Contact
+=======
+For more information about API don't hesitate to send an email to Vlad Mandrychenko (Director, vlad.mandrychenko@garnercorp.com).
+
+## Shipments API [/freight-forwarder-shipments]
+
+Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.  
+
+### Create a Shipment [POST]
+
+Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
+Use the shipmentNumber to make subsequent updates using HTTP PUT.
+
+All Purchase Orders and Line Items that are being shipped must be present when the shipment is created. Status information for each Line Item is optional 
+and can be updated at later point in time.
+
+We understand that data accuracy will not be at 100% and therefore we built in fault tolerance for erroneous po lines.
+* All po lines valid - 201 response
+* Some po lines valid - 201 response with list of errors with response
+* No po lines valid - 400 response with list of errors in the response
+
+For any other errors you will continue getting 400 response that will have to be corrected on your end.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+    
+    + Body
+    
+            {
+               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
+               "packingListNumber":"some number as string",
+               "isBreakBulk":false,
+               "breakBulkWeight":45.4,
+               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
+               "numberOfBreakBulkPieces":3,
+               "numberOfContainers":1,
+               "numberOfPackages":34,
+               "weight":4500.45,
+               "weightUnit":"kg",
+               "volume":554.3,
+               "volumeUnit":"SCM",
+               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+               "preAlertNumber":"some number as string",
+               "masterAirwayBill":"some bill",
+               "houseAirwayBill":"some bill",
+               "flightNumber":"XX134",
+               "carrier":"some carrier",
+               "originPort":"some port",
+               "destinationPort":"some port",
+               "purchaseOrders":[
+                  {
+                     "purchaseOrderNumber":"|mandatory|some po number as string",
+                     "vendorName":"some vendor name",
+                     "purchaseOrderLines":[
+                        {
+                           "purchaseOrderLine":"|mandatory|00001",
+                           "quantity":12.5,
+                           "quantityUnit":"kg",
+                           "quantityShipped":12.5,
+                           "quantityShippedUnit":"kg",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                        },
+                        {
+                           "purchaseOrderLine":"|mandatory|00002",
+                           "quantity":1,
+                           "quantityUnit":"each",
+                           "quantityShipped":1,
+                           "quantityShippedUnit":"each",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                        }
+                     ]
+                  }
+               ]
+            }
+
+    
++ Response 201
+    
+    + Headers
+    
+            Location: /freight-forwarder-shipments/{shipmentNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
+
++ Response 201
+    
+    + Headers
+    
+            Location: /freight-forwarder-shipments/{shipmentNumber}
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                },
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001340 - 10401 not found"
+                }
+              ]
+            }
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_MODE_OF_TRANSPORT",
+                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+                  "field": "modeOfTransportCode"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happaned on the server side, do not retry."
+                }
+              ]
+            }
+
+
+### Update a Shipment [PUT /freight-forwarder-shipments/{shipmentNumber}]
+
+Update a shipment using shipmentNumber as URI identifier. The shipmentNumber is provided to you in the Create Shipment response Location header. 
+
+All Purchase Orders and Line Items must be present if any of the shipment information is updated (status dates are still optional for each Line Item).
+
++ Parameters
+
+    + shipmentNumber (string) - URI identifier of the shipment, this is GCT shipmentNumber that is provided upon successful GCT shipment creation (HTTP POST) as response Location header value.
+
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
+               "packingListNumber":"some number as string",
+               "isBreakBulk":false,
+               "breakBulkWeight":45.4,
+               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
+               "numberOfBreakBulkPieces":3,
+               "numberOfContainers":1,
+               "numberOfPackages":34,
+               "weight":4500.45,
+               "weightUnit":"kg",
+               "volume":554.3,
+               "volumeUnit":"SCM",
+               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+               "preAlertNumber":"some number as string",
+               "masterAirwayBill":"some bill",
+               "houseAirwayBill":"some bill",
+               "flightNumber":"XX134",
+               "carrier":"some carrier",
+               "originPort":"some port",
+               "destinationPort":"some port",
+               "purchaseOrders":[
+                  {
+                     "purchaseOrderNumber":"|mandatory|some po number as string",
+                     "vendorName":"some vendor name",
+                     "purchaseOrderLines":[
+                        {
+                           "purchaseOrderLine":"|mandatory|00001",
+                           "quantity":12.5,
+                           "quantityUnit":"kg",
+                           "quantityShipped":12.5,
+                           "quantityShippedUnit":"kg",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                        },
+                        {
+                           "purchaseOrderLine":"|mandatory|00002",
+                           "quantity":1,
+                           "quantityUnit":"each",
+                           "quantityShipped":1,
+                           "quantityShippedUnit":"each",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                        }
+                     ]
+                  }
+               ]
+            }
+
+    
++ Response 200
+
+    + Headers
+    
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
+    + Body
+            
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                },
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001340 - 10401 not found"
+                }
+              ]
+            }
+            
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "SHIPMENT_NOT_FOUND",
+                  "description": "Shipment with shipment number '123456' not found."
+                }
+              ]
+            }
+
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_MODE_OF_TRANSPORT",
+                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+                  "field": "modeOfTransportCode"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+## Purchase Order Lines API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
+
+### Update a Purchase Order Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
+
+Provides an ability to update purchase order lines and their vendor, packer and freight forwarder statuses. 
+
+There is overlap between Shipment API and PO Line API as both contain freight forwarder statuses. Either can be called.
+Use Shipment API if you need to provide shipment information.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - ExxonMobil SAP purchase order number.
+    + lineNumber (string) - ExxonMobil SAP line number on the purchase order (00001, 00002, etc).
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.purchase-order-line+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "quantities": {
+                    "quantity": 12.5,
+                    "quantityUnit": "kg",
+                    "quantityShipped": 12.5,
+                    "quantityShippedUnit": "kg"
+                },
+                "vendor": {
+                    "vendorName": "some vendor name",
+                    "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
+                    "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
+                    "estimatedDeliveryDate": "YYYY-MM-DDThh:mm:ss",
+                    "readyAtVendorDate": "YYYY-MM-DDThh:mm:ss",
+                    "vendorDeliveredDate": "YYYY-MM-DDThh:mm:ss"
+                },
+                "packer": {
+                    "materialReceiptDate": "YYYY-MM-DDThh:mm:ss",
+                    "releaseToPackDate": "YYYY-MM-DDThh:mm:ss",
+                    "packingCompleteDate": "YYYY-MM-DDThh:mm:ss",
+                    "packingListReceivedDate": "YYYY-MM-DDThh:mm:ss",
+                    "packingListNumber": "String| reference"
+                },
+                "freightForwarder": {
+                    "goodsCollectedFromPackerDate": "YYYY-MM-DDThh:mm:ss",
+                    "deliveredToCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                    "preAlertDate": "YYYY-MM-DDThh:mm:ss",
+                    "estimatedTimeOfDeparturePortOfLoading": "YYYY-MM-DDThh:mm:ss",
+                    "actualDateOfDeparturePortOfLoading": "YYYY-MM-DDThh:mm:ss",
+                    "estimatedTimeOfArrivalPortOfDestination": "YYYY-MM-DDThh:mm:ss",
+                    "actualDateOfArrivalPortOfDestination": "YYYY-MM-DDThh:mm:ss",
+                    "documentsSentToCustomerDate": "YYYY-MM-DDThh:mm:ss",
+                    "documentsSentToCustoms": "YYYY-MM-DDThh:mm:ss",
+                    "customsStartedDate": "YYYY-MM-DDThh:mm:ss",
+                    "customsClearedDate": "YYYY-MM-DDThh:mm:ss",
+                    "readyToDispatchDate": "YYYY-MM-DDThh:mm:ss",
+                    "actualDispatchDate": "YYYY-MM-DDThh:mm:ss",
+                    "deliveredToSiteDate": "YYYY-MM-DDThh:mm:ss",
+                    "estimateDateOfDeliveryAtSite": "YYYY-MM-DDThh:mm:ss",
+                    "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                    "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss",
+                    "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss"
+                }
+            }
+            
+
++ Response 200
+
+    + Headers
+    
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid vendorAcknoweldgedDate date format.",
+                  "field": "vendorAcknoweldgedDate"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
