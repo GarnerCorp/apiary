@@ -135,6 +135,7 @@ For any other errors you will continue getting 400 response that will have to be
                "carrier":"some carrier",
                "originPort":"some port",
                "destinationPort":"some port",
+               "intermediateWarehouseName": "some intermediary warehouse",
                "purchaseOrders":[
                   {
                      "purchaseOrderNumber":"|mandatory|some po number as string",
@@ -163,7 +164,22 @@ For any other errors you will continue getting 400 response that will have to be
                            "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
                            "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
                            "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
-                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss",
+                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss",
+                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss",
+                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss",
+                           "countries": {
+                                "TD": {
+                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss",
+                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss",
+                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss",
+                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss",
+                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss",
+                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss",
+                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss"
+                                }
+                            }
                         },
                         {
                            "purchaseOrderLine":"|mandatory|00002",
@@ -188,7 +204,22 @@ For any other errors you will continue getting 400 response that will have to be
                            "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss",
                            "actualDispatchDate":"YYYY-MM-DDThh:mm:ss",
                            "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss",
-                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss"
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss",
+                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss",
+                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss",
+                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss",
+                           "countries": {
+                                "TD": {
+                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss",
+                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss",
+                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss",
+                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss",
+                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss",
+                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss",
+                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss"
+                                }
+                            }
                         }
                      ]
                   }
