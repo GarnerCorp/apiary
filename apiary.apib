@@ -108,8 +108,7 @@ Line item status updates (not list of line items) through Shipments API is depre
 Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
 Use the shipmentNumber to make subsequent updates using HTTP PUT.
 
-All Purchase Orders and Line Items that are being shipped must be present when the shipment is created. Status information for each Line Item is optional 
-and can be updated at later point in time.
+All Purchase Orders and Line Items that are being shipped must be present when the shipment is created. 
 
 We understand that data accuracy will not be at 100% and therefore we built in fault tolerance for erroneous po lines.
 * All po lines valid - 201 response
