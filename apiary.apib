@@ -7,7 +7,7 @@ The Global Control Tower API is designed for freight forwarders, packers and ven
 to purchase order shipment data in Global Control Tower (GCT) system.
 
 Headers
--------
+=======
 HTTP headers are generally used to represent request or response metadata (authentication data, caching strategy, content negotiation, etc).
 API requires number of mandatory headers to be sent with every request:
 * `Authorization:` BASE64 encoded username and password that is provided.
@@ -19,17 +19,17 @@ API requires number of mandatory headers to be sent with every request:
 
 
 Authentication
---------------
+==============
 The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request. 
 See more info about HTTP Basic here: https://github.com/vmandrychenko/http-api-guidelines#http-basic
 
 Trace ID
---------
+========
 Each response will come with generated TraceId. This UUID will be generated on every API invocation and will be logged as request flows through processing chain. 
 TraceId will be used to troubleshoot requests/responses on the client and server sides. 
 
 Content negotiation
--------------------
+===================
 `Accept` header allows client to request the preferred media type that server will return in the response. 
 `Content-Type` header in the response represents the media type of the content.
 
@@ -39,7 +39,6 @@ which will communicate to the application that you accept default media types in
 If you would like to skip content negotiation and skip `Accept` header, some of the responses will 
 be returned in `text/html` format (`Content-Type: text/html`). One example of this is "Authentication error", 
 which results in Login page in the response (`Content-Type: text/html`) instead of errors listed in `json` format (`Content-Type: application/vnd.garnercorp.errors+json;v=1.0`).
-
 
 Media types
 -----------
@@ -66,12 +65,12 @@ As of May 18, 2017, there is only 1 media type that is returned (`application/vn
 We will make API updates once this changes and will inform users via email.
 
 Encoding
---------
+========
 Json payload should have a standard JavaScript encoding which is UTF-8.
 
 
 Mandatory fields
-----------------
+================
 Mandatory fields will be marked "|mandatory|" in the examples provided.
 For all optional string fields omitting the key/value line or sending value as ""(empty string), the value 
 will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
@@ -79,7 +78,7 @@ and send the key along with ""(empty string) so that troubleshooting is easier o
 
 
 Status Dates
-------------
+============
 
 Status/event dates and estimated dates should be the date of the event at the local time where it occurs. 
 
