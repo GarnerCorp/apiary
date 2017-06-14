@@ -98,6 +98,11 @@ For more information about API don't hesitate to send an email to Vlad Mandryche
 
 Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.  
 
+Shipments API allows you to create and update shipment information and list of purchase order line items on the shipment.
+
+**It is highly recommended that you use the "Update Purchase Order Line API" to provide line item updates and their status updates. 
+Line item status updates through Shipments API is deprecated and will be removed in the future.**
+
 ### Create a Shipment [POST]
 
 Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
