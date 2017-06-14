@@ -6,6 +6,18 @@ HOST: https://test.globalcontroltower.com/gct/restful/
 The Global Control Tower API is designed for freight forwarders and vendors to provide updates 
 to purchase order shipment data in Global Control Tower (GCT) system.
 
+Headers
+-------
+HTTP headers are generally used to represent request or response metadata (authentication data, caching strategy, content negotiation, etc).
+API requires number of mandatory headers to be sent with every request:
+* Authorization: BASE64 encoded username and password that is provided.
+* Host: hostname of the server where the call is made to, like test.globalcontroltower.com or www.globalcontroltower.com
+* Referer: protocol + hostname combination, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+* User-Agent: user agent header is used to describe the HTTP client (request sender tool, etc) that is used to create HTTP request. Most off the shelf http clients will populate User-Agent, if you are writing custom HTTP client you can call it anything you want as long as it represents your tool in a unique way.
+* Content-Type: used to represent a media type of the content, text/html or application/vnd-foo-bar+json, etc.
+*ed Accept: used for content negotiation, you can specify to the server if you are would like to receive specific content media type in the response. This is primarily used for API versioning, see further paragraph on Content Negotiation.
+
+
 Authentication
 --------------
 The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request. 
@@ -56,6 +68,7 @@ We will make API updates once this changes and will inform users via email.
 Encoding
 --------
 Json payload should have a standard JavaScript encoding which is UTF-8.
+
 
 Mandatory fields
 ----------------
