@@ -608,7 +608,7 @@ Use Shipment API if you need to provide shipment information.
     + Body
     
             {
-                "quantities": {
+                "quantitiedd s": {
                     "quantity": 12.5,
                     "quantityUnit": "kg",
                     "quantityShipped": 12.5,
@@ -630,6 +630,8 @@ Use Shipment API if you need to provide shipment information.
                     "packingListNumber": "String| reference"
                 },
                 "freightForwarder": {
+                    "vesselName": "some vessel name",
+                    "intermediaryWarehouseName": "some warehouse name",
                     "goodsCollectedFromPackerDate": "YYYY-MM-DDThh:mm:ss",
                     "deliveredToCarrierDate": "YYYY-MM-DDThh:mm:ss",
                     "preAlertDate": "YYYY-MM-DDThh:mm:ss",
@@ -648,6 +650,7 @@ Use Shipment API if you need to provide shipment information.
                     "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss",
                     "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss",
                     "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss",
+                    "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss",
                     "countries": {
                         "TD": {
                             "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss",
