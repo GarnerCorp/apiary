@@ -1126,3 +1126,414 @@ Use Shipment API if you need to provide shipment information.
                 }
               ]
             }
+            
+
+## Intermediate Goods Receipt API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
+
+### Create an Intermediate Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
+
+Provides an ability to create intermediate (at Packer or Freight Forwarder) goods receipts for specific purchase order lines.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "receiptNumber": "gr number|mandatory",
+                "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
+                "type": "RECEIPT or REVERSAL|optiona, default is RECEIPT",
+                "quantity": 12.5,
+                "quantityUnit": "kg|quantity and unit is mandatory"
+                
+            }
+            
+
++ Response 201
+    
+    + Headers
+    
+            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid date format.",
+                  "field": "date"
+                }r
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+### Update an Intermediate Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
+
+Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "type": "RECEIPT or REVERSAL|optional, default is RECEIPT",
+                "quantity": 12.5,
+                "quantityUnit": "kg"
+            }
+            
+
++ Response 200
+    
+    + Headers
+
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid date format.",
+                  "field": "date"
+                }r
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+## Final Goods Receipt API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
+
+### Create a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
+
+Provides an ability to create final (at Warehouse or some other final destination) goods receipts for specific purchase order lines.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "receiptNumber": "gr number|mandatory",
+                "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
+                "type": "RECEIPT or REVERSAL|optiona, default is RECEIPT",
+                "quantity": 12.5,
+                "quantityUnit": "kg|quantity and unit is mandatory"
+                
+            }
+            
+
++ Response 201
+    
+    + Headers
+    
+            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid date format.",
+                  "field": "date"
+                }r
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+### Update a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
+
+Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "type": "RECEIPT or REVERSAL|optional, default is RECEIPT",
+                "quantity": 12.5,
+                "quantityUnit": "kg"
+            }
+            
+
++ Response 200
+    
+    + Headers
+
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid date format.",
+                  "field": "date"
+                }r
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
