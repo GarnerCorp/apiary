@@ -789,24 +789,6 @@ Provides an ability to access existing purchase orders.
                 "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
             }
             
-+ Response 400
-    
-    + Headers
-    
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "INVALID_DATE_VALUE",
-                  "description": "Invalid creation date format.",
-                  "field": "creationDate"
-                }r
-              ]
-            }
-
 + Response 401
     
     + Headers
@@ -835,7 +817,7 @@ Provides an ability to access existing purchase orders.
             {
               "errors": [
                 {
-                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "code": "READ_ACCESS_NOT_ALLOWED",
                   "description": "You are authorized for read access only."
                 }
               ]
@@ -1234,6 +1216,176 @@ Use Shipment API if you need to provide shipment information.
               ]
             }
             
+
+### Get a Purchase Order Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
+
+Provides an ability to create purchase order lines and related material (sku), destination location (plant) and vendor(party).
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/vnd.garnercorp.purchase-order-line+json;v=1.0
+
++ Response 201
+    
+    + Headers
+    
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+    + Body
+    
+            {
+               "closedDate": "YYYY-MM-DDThh:mm:ssZ|specifies the date the line was closed",
+               "creationDate": "YYYY-MM-DDThh:mm:ssZ",
+               "requiredDate": "YYYY-MM-DDThh:mm:ss",
+               "sku": {
+                  "code": "catalogued material code",
+                  "description": "catalogued material description"
+               },
+               "plant": {
+                  "code": "plant or location code"
+               },
+               "quantities": {
+                  "quantity": 12.5,
+                  "quantityUnit": "kg",
+                  "quantityShipped": 12.5,
+                  "quantityShippedUnit": "kg"
+               },
+               "price": {
+                  "grossPrice": 1299,
+                  "grossPriceCurrency": "USD| default is USD"
+               },
+               "vendor": {
+                  "code": "some vendor code",
+                  "vendorName": "some vendor name",
+                  "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
+                  "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
+                  "estimatedDeliveryDate": "YYYY-MM-DDThh:mm:ss",
+                  "readyAtVendorDate": "YYYY-MM-DDThh:mm:ss",
+                  "vendorDeliveredDate": "YYYY-MM-DDThh:mm:ss"
+               },
+               "packer": {
+                  "materialReceiptDate": "YYYY-MM-DDThh:mm:ss",
+                  "releaseToPackDate": "YYYY-MM-DDThh:mm:ss",
+                  "packingCompleteDate": "YYYY-MM-DDThh:mm:ss",
+                  "packingListReceivedDate": "YYYY-MM-DDThh:mm:ss",
+                  "packingListNumber": "String| reference"
+               },
+               "freightForwarder": {
+                  "vesselName": "some vessel name",
+                  "intermediaryWarehouseName": "some warehouse name",
+                  "goodsCollectedFromPackerDate": "YYYY-MM-DDThh:mm:ss",
+                  "deliveredToCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                  "preAlertDate": "YYYY-MM-DDThh:mm:ss",
+                  "estimatedTimeOfDeparturePortOfLoading": "YYYY-MM-DDThh:mm:ss",
+                  "actualDateOfDeparturePortOfLoading": "YYYY-MM-DDThh:mm:ss",
+                  "estimatedTimeOfArrivalPortOfDestination": "YYYY-MM-DDThh:mm:ss",
+                  "actualDateOfArrivalPortOfDestination": "YYYY-MM-DDThh:mm:ss",
+                  "documentsSentToCustomerDate": "YYYY-MM-DDThh:mm:ss",
+                  "documentsSentToCustoms": "YYYY-MM-DDThh:mm:ss",
+                  "customsStartedDate": "YYYY-MM-DDThh:mm:ss",
+                  "customsClearedDate": "YYYY-MM-DDThh:mm:ss",
+                  "readyToDispatchDate": "YYYY-MM-DDThh:mm:ss",
+                  "actualDispatchDate": "YYYY-MM-DDThh:mm:ss",
+                  "deliveredToSiteDate": "YYYY-MM-DDThh:mm:ss",
+                  "estimateDateOfDeliveryAtSite": "YYYY-MM-DDThh:mm:ss",
+                  "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss",
+                  "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss",
+                  "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss",
+                  "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss",
+                  "countries": {
+                     "TD": {
+                        "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss",
+                        "arrivedAtP2": "YYYY-MM-DDThh:mm:ss",
+                        "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss",
+                        "arrivedAtP4": "YYYY-MM-DDThh:mm:ss",
+                        "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss",
+                        "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss",
+                        "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss"
+                     }
+                  }
+               }
+            }
+
+
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found."
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "READ_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
 
 ## Intermediate Goods Receipt API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
 
