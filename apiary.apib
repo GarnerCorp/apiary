@@ -1217,7 +1217,7 @@ Use Shipment API if you need to provide shipment information.
             }
             
 
-### Get a Purchase Order Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
+### Get a Purchase Order Line [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
 
 Provides an ability to create purchase order lines and related material (sku), destination location (plant) and vendor(party).
 
@@ -1516,7 +1516,111 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
               ]
             }
 
-### Update an Intermediate Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
+### Get an Intermediate Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
+
+Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+    + receiptNumber - the number of the goods receipt
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
+
++ Response 200
+    
+    + Headers
+
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+    + Body
+    
+            {
+                "receiptNumber": "some gr number" 
+                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "type": "RECEIPT or REVERSAL",
+                "quantity": 12.5,
+                "quantityUnit": "kg"
+            }
+   
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "GR_FOR_PO_LINE_NOT_FOUND",
+                  "description": "GR 1234 for Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "READ_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+### Update an Intermediate Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
 
 Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
@@ -1639,6 +1743,7 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
                 }
               ]
             }
+
 
 ## Final Goods Receipt API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
 
@@ -1769,7 +1874,112 @@ Provides an ability to create final (at Warehouse or some other final destinatio
               ]
             }
 
-### Update a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
+### Get an Final Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
+
+Provides an ability to get final (at Warehouse or final destination) goods receipt for specific purchase order lines.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+    + receiptNumber - the number of the goods receipt
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
+
++ Response 200
+    
+    + Headers
+
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+    + Body
+    
+            {
+                "receiptNumber": "some gr number" 
+                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "type": "RECEIPT or REVERSAL",
+                "quantity": 12.5,
+                "quantityUnit": "kg"
+            }
+   
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "GR_FOR_PO_LINE_NOT_FOUND",
+                  "description": "GR 1234 for Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "READ_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+
+### Update a Final Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
 
 Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
 
