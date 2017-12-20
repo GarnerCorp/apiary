@@ -534,6 +534,69 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
               ]
             }
 
+## Purchase Order API [/purchase-orders/{purchaseOrderNumber}]
+
+### Create a Purchase Order [POST /purchase-orders/]
+
+Provides an ability to create purchase orders. Purchase orders must be created before Purchase Order Lines.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.purchase-order+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "number": "purchase order number|mandatory",
+                "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+            }
+            
+
++ Response 201
+    
+    + Headers
+    
+            Location: /purchase-orders/{purchaseOrderNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+### Update a Purchase Order [PUT /purchase-orders/{purchaseOrderNumber}]
+
+Provides an ability to update purchase orders.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.purchase-order+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+    
+            {
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+            }
+            
+
++ Response 200
+    
+    + Headers
+    
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+
+
 ## Purchase Order Lines API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
 
 ### Update a Purchase Order Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
