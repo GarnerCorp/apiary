@@ -534,7 +534,7 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
               ]
             }
 
-## Purchase Order API [/purchase-orders/{purchaseOrderNumber}]
+## Purchase Order API [/purchase-orders/]
 
 ### Create a Purchase Order [POST /purchase-orders/]
 
@@ -641,6 +641,10 @@ be included in the response to indicate the location of the newly created resour
 
 Provides an ability to update purchase orders.
 
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+
 + Request
 
     + Headers
@@ -698,6 +702,109 @@ Provides an ability to update purchase orders.
                   "field": "creationDate"
                 }              
                 ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+
+### Get a Purchase Order [GET /purchase-orders/{purchaseOrderNumber}]
+
+Provides an ability to access existing purchase orders.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+
++ Request
+
+    + Headers
+    
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/vnd.garnercorp.purchase-order+json;v=1.0
+
++ Response 200
+    
+    + Headers
+    
+            Location: /purchase-orders/{purchaseOrderNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
+    + Body
+    
+            {
+                "number": "purchase order number",
+                "creationDate": "YYYY-MM-DDThh:mm:ssZ",
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+            }
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid creation date format.",
+                  "field": "creationDate"
+                }r
+              ]
             }
 
 + Response 401
@@ -1134,6 +1241,12 @@ Use Shipment API if you need to provide shipment information.
 
 Provides an ability to create intermediate (at Packer or Freight Forwarder) goods receipts for specific purchase order lines.
 
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+
+
 + Request
 
     + Headers
@@ -1255,6 +1368,12 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
 
 Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+    + receiptNumber - the number of the goods receipt
+
 + Request
 
     + Headers
@@ -1374,6 +1493,12 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
 ### Create a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
 
 Provides an ability to create final (at Warehouse or some other final destination) goods receipts for specific purchase order lines.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+
 
 + Request
 
@@ -1495,6 +1620,13 @@ Provides an ability to create final (at Warehouse or some other final destinatio
 ### Update a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
 
 Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
+
++ Parameters
+
+    + purchaseOrderNumber (string) - Purchase order number.
+    + lineNumber (string) - Line number on the purchase order (00001, 00002, 10001, etc).
+    + receiptNumber - the number of the goods receipt
+
 
 + Request
 
