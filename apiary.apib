@@ -567,6 +567,75 @@ be included in the response to indicate the location of the newly created resour
     
             Location: /purchase-orders/{purchaseOrderNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+            
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid creation date format.",
+                  "field": "creationDate"
+                }r
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
 
 ### Update a Purchase Order [PUT /purchase-orders/{purchaseOrderNumber}]
 
@@ -596,6 +665,91 @@ Provides an ability to update purchase orders.
     
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_NOT_FOUND",
+                  "description": "Po 4501001010 not found"
+                }
+              ]
+            }
+
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid creation date format.",
+                  "field": "creationDate"
+                }              
+                ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
 
 
 ## Purchase Order Lines API [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
@@ -700,6 +854,97 @@ Provides an ability to create purchase order lines and related material (sku), d
     
             Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumberd}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_NOT_FOUND",
+                  "description": "Po 4501001010 not found."
+                }
+              ]
+            }
+
++ Response 400
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid vendorAcknoweldgedDate date format.",
+                  "field": "vendorAcknoweldgedDate"
+                }
+              ]
+            }
+
++ Response 401
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
 
 ### Update a Purchase Order Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
 
