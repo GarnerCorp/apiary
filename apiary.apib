@@ -1163,6 +1163,24 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
     
             Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
             
 + Response 400
     
@@ -1263,7 +1281,25 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
     + Headers
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "GR_FOR_PO_LINE_NOT_FOUND",
+                  "description": "GR 1234 for Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
+    
 + Response 400
     
     + Headers
@@ -1368,6 +1404,24 @@ Provides an ability to create final (at Warehouse or some other final destinatio
     
             Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
             
 + Response 400
     
@@ -1469,6 +1523,24 @@ Provides an ability to update final (warehouse or some other final destination) 
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
             
++ Response 404
+    
+    + Headers
+    
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "GR_FOR_PO_LINE_NOT_FOUND",
+                  "description": "GR 1234 for Po Line 4501001010 - 00002 not found"
+                }
+              ]
+            }
+
+            
 + Response 400
     
     + Headers
@@ -1483,7 +1555,7 @@ Provides an ability to update final (warehouse or some other final destination) 
                   "code": "INVALID_DATE_VALUE",
                   "description": "Invalid date format.",
                   "field": "date"
-                }r
+                }
               ]
             }
 
