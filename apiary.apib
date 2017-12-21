@@ -557,7 +557,8 @@ be included in the response to indicate the location of the newly created resour
             {
                 "number": "purchase order number|mandatory",
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "closed": false,
                 "vendor": {
                     "code": "vendor code|mandatory",
                     "name": "vendor name|mandatory"
@@ -664,6 +665,7 @@ Provides an ability to update purchase orders.
     
             {
                 "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "closed": false,
                 "vendor": {
                     "code": "vendor code",
                     "name": "vendor name"
@@ -793,6 +795,7 @@ Provides an ability to access existing purchase orders.
     
             {
                 "number": "purchase order number",
+                "closed": false,
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ",
                 "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
                 "vendor": {
@@ -877,7 +880,7 @@ Provides an ability to create purchase order lines and related material (sku), d
     
             {
                "line": "line number|mandatory|00001, 00002, 10001, 10002, etc",
-               "closedDate": "YYYY-MM-DDThh:mm:ssZ|specifies the date the line was closed",
+               "closed": false,
                "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
                "requiredDate": "YYYY-MM-DDThh:mm:ss",
                "sku": {
@@ -1071,7 +1074,27 @@ Use Shipment API if you need to provide shipment information.
     + Body
     
             {
-                "quantities": {
+               "closed": false,
+               "creationDate": "YYYY-MM-DDThh:mm:ssZ",
+               "requiredDate": "YYYY-MM-DDThh:mm:ss",
+               "sku": {
+                  "code": "catalogued material code",
+                  "description": "catalogued material description"
+               },
+               "plant": {
+                  "code": "plant or location code"
+               },
+               "quantities": {
+                  "quantity": 12.5,
+                  "quantityUnit": "kg",
+                  "quantityShipped": 12.5,
+                  "quantityShippedUnit": "kg"
+               },
+               "price": {
+                  "grossPrice": 1299,
+                  "grossPriceCurrency": "USD| default is USD"
+               },
+               "quantities": {
                     "quantity": 12.5,
                     "quantityUnit": "kg",
                     "quantityShipped": 12.5,
@@ -1254,7 +1277,7 @@ Provides an ability to create purchase order lines and related material (sku), d
     + Body
     
             {
-               "closedDate": "YYYY-MM-DDThh:mm:ssZ|specifies the date the line was closed",
+               "closed": false,
                "creationDate": "YYYY-MM-DDThh:mm:ssZ",
                "requiredDate": "YYYY-MM-DDThh:mm:ss",
                "sku": {
