@@ -558,6 +558,10 @@ be included in the response to indicate the location of the newly created resour
                 "number": "purchase order number|mandatory",
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
                 "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+                "vendor": {
+                    "code": "vendor code|mandatory",
+                    "name": "vendor name|mandatory"
+                    }
             }
             
 
@@ -659,7 +663,11 @@ Provides an ability to update purchase orders.
     + Body
     
             {
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "vendor": {
+                    "code": "vendor code",
+                    "name": "vendor name"
+                    }
             }
             
 
@@ -786,7 +794,11 @@ Provides an ability to access existing purchase orders.
             {
                 "number": "purchase order number",
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ",
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ"
+                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "vendor": {
+                    "code": "vendor code",
+                    "name": "vendor name"
+                    }
             }
             
 + Response 401
@@ -886,8 +898,6 @@ Provides an ability to create purchase order lines and related material (sku), d
                   "grossPriceCurrency": "USD| default is USD"
                },
                "vendor": {
-                  "code": "some vendor code|mandatory",
-                  "vendorName": "some vendor name|mandatory",
                   "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
                   "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
                   "estimatedDeliveryDate": "YYYY-MM-DDThh:mm:ss",
@@ -1068,7 +1078,6 @@ Use Shipment API if you need to provide shipment information.
                     "quantityShippedUnit": "kg"
                 },
                 "vendor": {
-                    "vendorName": "some vendor name",
                     "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
                     "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
                     "estimatedDeliveryDate": "YYYY-MM-DDThh:mm:ss",
@@ -1266,8 +1275,6 @@ Provides an ability to create purchase order lines and related material (sku), d
                   "grossPriceCurrency": "USD| default is USD"
                },
                "vendor": {
-                  "code": "some vendor code",
-                  "vendorName": "some vendor name",
                   "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
                   "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
                   "estimatedDeliveryDate": "YYYY-MM-DDThh:mm:ss",
