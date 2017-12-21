@@ -1422,9 +1422,8 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
             {
                 "receiptNumber": "gr number|mandatory",
                 "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
-                "type": "RECEIPT or REVERSAL|optiona, default is RECEIPT",
                 "quantity": 12.5,
-                "quantityUnit": "kg|quantity and unit is mandatory"
+                "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
                 
             }
             
@@ -1554,9 +1553,8 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
             {
                 "receiptNumber": "some gr number" 
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
-                "type": "RECEIPT or REVERSAL",
                 "quantity": 12.5,
-                "quantityUnit": "kg"
+                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
    
 + Response 404
@@ -1652,9 +1650,8 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
     
             {
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
-                "type": "RECEIPT or REVERSAL|optional, default is RECEIPT",
                 "quantity": 12.5,
-                "quantityUnit": "kg"
+                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
             
 
@@ -1780,9 +1777,8 @@ Provides an ability to create final (at Warehouse or some other final destinatio
             {
                 "receiptNumber": "gr number|mandatory",
                 "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
-                "type": "RECEIPT or REVERSAL|optiona, default is RECEIPT",
                 "quantity": 12.5,
-                "quantityUnit": "kg|quantity and unit is mandatory"
+                "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
                 
             }
             
@@ -1912,9 +1908,8 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             {
                 "receiptNumber": "some gr number" 
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
-                "type": "RECEIPT or REVERSAL",
                 "quantity": 12.5,
-                "quantityUnit": "kg"
+                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
    
 + Response 404
@@ -2012,9 +2007,8 @@ Provides an ability to update final (warehouse or some other final destination) 
     
             {
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
-                "type": "RECEIPT or REVERSAL|optional, default is RECEIPT",
                 "quantity": 12.5,
-                "quantityUnit": "kg"
+                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
             
 
