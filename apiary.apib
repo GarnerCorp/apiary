@@ -68,6 +68,22 @@ Encoding
 ========
 Json payload should have a standard JavaScript encoding which is UTF-8.
 
+Payload Format and Fields
+==========================
+APIs are written in a way to support wide variaty of formats (JSON, XML, CSV, etc), but the only format that is currently supported for request and response is JSON (https://www.json.org/)
+
+In order to find out what fields and types are required/supported, please take a look at the examples provided. If the field in the example is integer, field type is JSON integer.
+For string fields, they will be string fields and will also contain mandatory note and description right in the example.
+Same goes for booleans, if in the exaple the field is boolean, we expect boolean. 
+
+Pay attention to date formats: they follow standard ISO-8601 variety of format. See field example for format. Z in the end indicates UTC time, otherwise the date is in local time where event occured. 
+For example, if the "customs cleared" happened in Angola, the "custom cleared" date will indicate when it happened in Angola and there will be no zone conversions done.
+
+When it comes to string sizes, the allowed maximums are not specified but they are reasonable. 
+For example if you pass a vendor code that is 700 characters in size, that is considered unreasonable, but having the 100 character vendor name or under 500 character material description is totally reasonable.
+If you contain a reasonable data that exceeds our limits, please let us know immediately and we will increase field size.
+
+Examples contain all of the fields that are mandatory or ortherwise optional in the payload. 
 
 Mandatory fields
 ================
