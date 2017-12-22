@@ -64,10 +64,6 @@ or
 As of May 18, 2017, there is only 1 media type that is returned (`application/vnd.garnercorp.errors+json;v=1.0`). 
 We will make API updates once this changes and will inform users via email.
 
-Encoding
-========
-Json payload should have a standard JavaScript encoding which is UTF-8.
-
 Payload Format and Fields
 ==========================
 APIs are written in a way to support wide variaty of formats (JSON, XML, CSV, etc), but the only format that is currently supported for request and response is JSON (https://www.json.org/)
@@ -91,6 +87,10 @@ Mandatory fields will be marked "|mandatory|" in the examples provided.
 For all optional string fields omitting the key/value line or sending value as ""(empty string), the value 
 will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
 and send the key along with ""(empty string) so that troubleshooting is easier on both sides.
+
+Encoding
+========
+Json payload should have a standard JavaScript encoding which is UTF-8.
 
 Country specific fields
 =======================
