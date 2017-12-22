@@ -1592,7 +1592,7 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
               ]
             }
 
-### Get an Intermediate Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
+### Get an Intermediate Goods Receipt Line [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
@@ -1696,7 +1696,7 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
               ]
             }
 
-### Update an Intermediate Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
+### Update an Intermediate Goods Receipt Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
@@ -1821,11 +1821,11 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             }
 
 
-## Final Goods Receipt API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
+## Final Goods Receipt Line API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
 We are not planning to have a separate API for goods receipt header. Header info will be inclided with line info (ie, gr number)
 
-### Create a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
+### Create a Final Goods Receipt Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
 Provides an ability to create final (at Warehouse or some other final destination) goods receipts for specific purchase order lines.
 
@@ -1952,7 +1952,7 @@ Provides an ability to create final (at Warehouse or some other final destinatio
               ]
             }
 
-### Get an Final Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
+### Get an Final Goods Receipt Line [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to get final (at Warehouse or final destination) goods receipt for specific purchase order lines.
 
@@ -2057,7 +2057,7 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             }
 
 
-### Update a Final Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
+### Update a Final Goods Receipt Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
 
