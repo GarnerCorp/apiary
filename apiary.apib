@@ -536,6 +536,26 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
 
 ## Purchase Order API - NEW! [/purchase-orders/]
 
+This series of endpoints provide ability to create, update and retreive purchase orders. Purchase orders
+will be created separately from enclising Purchase Order Lines. 
+
+The Flow
+==========
+Typical flow to create Purchase Orders, their lines and later process Goods Receipts would look like this:
+* Firs you create PO Header, 1 PO per HTTP call - POST /purchase-orders
+* Then you can create Lines for newly created PO Header - 1 line per HTTP call - POST /purchase-orders/{purchaseOrderNumber}/lines. In order to add 3 lines to PO Header you will have to make 3 HTTP calls.
+* To get currect PO Header info - GET /purchase-orders/{purchaseOrderNumber}
+* To update PO Header Info - PUT /purchase-orders/{purchaseOrderNumber}
+* To get currect PO Line info - GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}
+* To update Line Info or any of the vendor/packer/shipment statuses for specific line - PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}
+* Then you can create Intermediate Goods Receipt - 1 GR Line per call - POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/
+* To get Intermediate Goods Receipt - GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}
+* To update Intermediate Goods Receipt - PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}
+* Same logic applies to Final Goods Receipts
+
+
+
+
 ### Create a Purchase Order [POST /purchase-orders/]
 
 Provides an ability to create purchase orders. Purchase orders must be created before Purchase Order Lines. Upon creation Location header will
