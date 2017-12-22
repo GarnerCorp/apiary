@@ -27,7 +27,6 @@ API requires number of mandatory headers to be sent with every request:
 * `Content-Type:` rused to represent a media type of the content, text/html or application/vnd-foo-bar+json, etc.
 * `Accept:` used for content negotiation, you can specify to the server if you are would like to receive specific content media type in the response. This is primarily used for API versioning, see further paragraph on Content Negotiation.
 
-
 Authentication
 ==============
 The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request. 
@@ -92,14 +91,14 @@ If you send a reasonable data that exceeds our limits, please let us know immedi
 Body samples contain all of the fields that are mandatory or ortherwise optional in the real payload. 
 
 Mandatory fields
-================
+----------------------
 Mandatory fields will be marked "|mandatory|" in the bopdy provided.
 For all optional string fields omitting the key/value line or sending value as ""(empty string), the value 
 will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
 and send the key along with ""(empty string) so that troubleshooting is easier on both sides.
 
 Encoding
-========
+---------
 Json payload should have a standard JavaScript encoding which is UTF-8.
 
 Country specific fields
