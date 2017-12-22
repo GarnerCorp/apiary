@@ -3,7 +3,7 @@ HOST: https://test.globalcontroltower.com/gct/restful/
 
 # Global Control Tower (GCT) API
 
-The Global Control Tower API is designed for purchasers, freight forwarders, packers and vendors to provide updates 
+The Global Control Tower API is designed for purchasers, freight forwarders, packers and vendors to provide updates
 to purchase order, po line, shipment data in Global Control Tower (GCT) system.
 
 This API adheres to HTTP 1.1 specification and is "RESTful". https://github.com/vmandrychenko/http-api-guidelines are used for development of this interface. Please refer to the guidelines (https://github.com/vmandrychenko/http-api-guidelines#format) for generic field formats.
@@ -29,29 +29,29 @@ API requires number of mandatory headers to be sent with every request:
 
 Authentication
 ==============
-The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request. 
+The GCT API supports HTTP Basic authentication where the username and password is provided via Authorization header for every request.
 See more info about HTTP Basic here: https://github.com/vmandrychenko/http-api-guidelines#http-basic
 
 Trace ID
 ========
-Each response will come with generated TraceId. This UUID will be generated on every API invocation and will be logged as request flows through processing chain. 
-TraceId will be used to troubleshoot requests/responses on the client and server sides. 
+Each response will come with generated TraceId. This UUID will be generated on every API invocation and will be logged as request flows through processing chain.
+TraceId will be used to troubleshoot requests/responses on the client and server sides.
 
 Content negotiation
 ===================
-`Accept` header allows client to request the preferred media type that server will return in the response. 
+`Accept` header allows client to request the preferred media type that server will return in the response.
 `Content-Type` header in the response represents the media type of the content.
 
 If you would like to use light weight form of content negotiation for simplicity purposes, use `Accept: application/json` header,
 which will communicate to the application that you accept default media types in `json` format. This is recommended approach at the moment.
 
-If you would like to skip content negotiation and skip `Accept` header, some of the responses will 
-be returned in `text/html` format (`Content-Type: text/html`). One example of this is "Authentication error", 
+If you would like to skip content negotiation and skip `Accept` header, some of the responses will
+be returned in `text/html` format (`Content-Type: text/html`). One example of this is "Authentication error",
 which results in Login page in the response (`Content-Type: text/html`) instead of errors listed in `json` format (`Content-Type: application/vnd.garnercorp.errors+json;v=1.0`).
 
 Media types
 -----------
-API content type is communicated through vendor media types: `application/vnd.garnercorp.someresourcename+json;v=1.0`. 
+API content type is communicated through vendor media types: `application/vnd.garnercorp.someresourcename+json;v=1.0`.
 Use `Accept: application/json` to accept all media types in `json` format without being specific.
 Use `Accept: application/vnd.garnercorp.someresourcename+json;v=1.0` header to indicate the specific accepted media type. This is applicable for versioning.
 
@@ -59,18 +59,18 @@ API versioning
 --------------
 This section becomes applicable once we get into scenarios where we have more than one version of the same resource available in the response. As of May 18, 2017 this is not the case yet.
 
-API/resource versioning will be handled through content negotiation using custom media types that is communicated via `Accept` and `Content-Type` headers. 
+API/resource versioning will be handled through content negotiation using custom media types that is communicated via `Accept` and `Content-Type` headers.
 One of the examples of a shipment media type: `application/vnd.garnercorp.shipment+json;v=1.0`. Note media type parameter: `v=1.0`
 Minor and major version numbers are incremented for the backwards incompatible updates performed to API/resources. This should be a very rare case.
 Minor version is incremented during minor updates and major version is incremented during major updates.
 
-In case of the same media type represented as 2 separate versions, content negotiation can be used to request a specific version of the media. 
+In case of the same media type represented as 2 separate versions, content negotiation can be used to request a specific version of the media.
 Example of `Accept` headers for errors resource in this case would be:
 `Accept: application/vnd.garnercorp.errors+json;v=1.0`
 or
 `Accept: application/vnd.garnercorp.errors+json;v=2.0`
 
-As of May 18, 2017, there is only 1 media type that is returned (`application/vnd.garnercorp.errors+json;v=1.0`). 
+As of May 18, 2017, there is only 1 media type that is returned (`application/vnd.garnercorp.errors+json;v=1.0`).
 We will make API updates once this changes and will inform users via email.
 
 Payload Format and Fields
@@ -81,19 +81,19 @@ In order to find out what fields and types are required/supported, please take a
 Strings will be `string` fields in the body and will also contain mandatory note and description right in the example.
 Same goes for `boolean` fields. If you see a boolean in the body, it means we expect boolean.
 
-Pay attention to date formats: they follow standard ISO-8601 variety of formats. Look for format in the field of the body. Z in the end indicates UTC time, otherwise the date is in local time where event occured. 
+Pay attention to date formats: they follow standard ISO-8601 variety of formats. Look for format in the field of the body. Z in the end indicates UTC time, otherwise the date is in local time where event occured.
 For example, if the "customs cleared" happened in Angola, the "custom cleared" date will indicate when it happened in Angola and there will be no zone conversions done.
 
 When it comes to string sizes, the allowed maximums are not specified but they are reasonable. The goal is not to worry about it during client implementation.
 For example if you pass a vendor code that is 700 characters in size, that is considered unreasonable, but having the 100 character vendor name or under 500 character material description is totally reasonable.
 If you send a reasonable data that exceeds our limits, please let us know immediately and we will increase field size.
 
-Body samples contain all of the fields that are mandatory or ortherwise optional in the real payload. 
+Body samples contain all of the fields that are mandatory or ortherwise optional in the real payload.
 
 Mandatory fields
 ----------------------
 Mandatory fields will be marked "|mandatory|" in the bopdy provided.
-For all optional string fields omitting the key/value line or sending value as ""(empty string), the value 
+For all optional string fields omitting the key/value line or sending value as ""(empty string), the value
 will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
 and send the key along with ""(empty string) so that troubleshooting is easier on both sides.
 
@@ -108,13 +108,13 @@ Country specific fields are fields that are valid only for a country or more but
 Status Dates
 ============
 
-Status/event dates and estimated dates should be the date of the event at the local time where it occurs. 
+Status/event dates and estimated dates should be the date of the event at the local time where it occurs.
 
 Historical Data
 ===============
 If you need to provide historical data dump it can be done through API:
 * Iterate through every item in the data dump and make HTTP calls to the API
-* For every shipment make a call to Shipment API sending all the POs + lines that are on that shipment. For convenience all status updates for every line can be done separately through Update PO Line API that contain Vendor and Packer statuses in addition to Freight Forwarder statuses. 
+* For every shipment make a call to Shipment API sending all the POs + lines that are on that shipment. For convenience all status updates for every line can be done separately through Update PO Line API that contain Vendor and Packer statuses in addition to Freight Forwarder statuses.
 * Do not make parallel HTTP requests to avoid server overload and to ensure data consistency if there is interdepency between the calls.
 * Log all the non 2XX responses for troubleshooting purposes.
 
@@ -128,11 +128,11 @@ For more information about API don't hesitate to send an email to Vlad Mandryche
 
 ## Shipments API [/freight-forwarder-shipments]
 
-Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.  
+Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.
 
 Shipments API allows you to create and update shipment information and a list of purchase order line items on the shipment.
 
-**It is highly recommended that you use the "Update Purchase Order Line API" to provide line item updates and their status updates. 
+**It is highly recommended that you use the "Update Purchase Order Line API" to provide line item updates and their status updates.
 Line item status updates (not list of line items) through Shipments API is deprecated as of June 14, 2017 and will be removed in the future once everyone stops using it.**
 
 ### Create a Shipment [POST]
@@ -140,7 +140,7 @@ Line item status updates (not list of line items) through Shipments API is depre
 Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
 Use the shipmentNumber to make subsequent updates using HTTP PUT.
 
-All Purchase Orders and Line Items that are being shipped must be present when the shipment is created. 
+All Purchase Orders and Line Items that are being shipped must be present when the shipment is created.
 
 We understand that data accuracy will not be at 100% and therefore we built in fault tolerance for erroneous po lines.
 * All po lines valid - 201 response
@@ -152,16 +152,16 @@ For any other errors you will continue getting 400 response that will have to be
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
             Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
             User-Agent: Your-Http-Client-Name/Version.Number
             Accept: application/json
-    
+
     + Body
-    
+
             {
                "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
                "packingListNumber":"some number as string",
@@ -239,19 +239,19 @@ For any other errors you will continue getting 400 response that will have to be
                ]
             }
 
-    
-+ Response 201
-    
-    + Headers
-    
-            Location: /freight-forwarder-shipments/{shipmentNumber}
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
 
 + Response 201
-    
+
     + Headers
-    
+
+            Location: /freight-forwarder-shipments/{shipmentNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+
++ Response 201
+
+    + Headers
+
             Location: /freight-forwarder-shipments/{shipmentNumber}
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
@@ -269,11 +269,11 @@ For any other errors you will continue getting 400 response that will have to be
                 }
               ]
             }
-            
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -294,9 +294,9 @@ For any other errors you will continue getting 400 response that will have to be
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -311,9 +311,9 @@ For any other errors you will continue getting 400 response that will have to be
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -328,9 +328,9 @@ For any other errors you will continue getting 400 response that will have to be
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -347,7 +347,7 @@ For any other errors you will continue getting 400 response that will have to be
 
 ### Update a Shipment [PUT /freight-forwarder-shipments/{shipmentNumber}]
 
-Update a shipment using shipmentNumber as URI identifier. The shipmentNumber is provided to you in the Create Shipment response Location header. 
+Update a shipment using shipmentNumber as URI identifier. The shipmentNumber is provided to you in the Create Shipment response Location header.
 
 All Purchase Orders and Line Items must be present if any of the shipment information is updated.
 
@@ -359,7 +359,7 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -368,7 +368,7 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
             Accept: application/json
 
     + Body
-    
+
             {
                "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
                "packingListNumber":"some number as string",
@@ -446,15 +446,15 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
                ]
             }
 
-    
+
 + Response 200
 
     + Headers
-    
+
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
     + Body
-            
+
             {
               "errors": [
                 {
@@ -467,11 +467,11 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
                 }
               ]
             }
-            
+
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -486,9 +486,9 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
             }
 
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -509,9 +509,9 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -526,9 +526,9 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -543,9 +543,9 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -562,7 +562,7 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
 ## Purchase Order API - NEW! [/purchase-orders/]
 
 This series of endpoints provide ability to create, update and retreive purchase orders. Purchase orders
-will be created separately from enclising Purchase Order Lines. 
+will be created separately from enclising Purchase Order Lines.
 
 The Flow
 ==========
@@ -573,9 +573,9 @@ Typical flow to create Purchase Orders, their lines and later process Goods Rece
 * To update PO Header Info - `PUT /purchase-orders/{purchaseOrderNumber}`
 * To get currect PO Line info - `GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}`
 * To update Line Info or any of the vendor/packer/shipment statuses for specific line - `PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}`
-* Then you can create Intermediate Goods Receipt - 1 GR Line per call - `POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts`
-* To get Intermediate Goods Receipt - `GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}`
-* To update Intermediate Goods Receipt - `fPUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}`
+* Then you can create Intermediate Goods Receipt - 1 GR Line per call - `POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-line`
+* To get Intermediate Goods Receipt - `GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}/lines/{lineNumber}`
+* To update Intermediate Goods Receipt - `fPUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{goodsReceiptNumber}/lines/{lineNumber}
 * Same logic applies to Final Goods Receipts
 
 Pay attention to payload format: https://globalcontroltower.docs.apiary.io/#introduction/payload-format-and-fields
@@ -589,7 +589,7 @@ be included in the response to indicate the location of the newly created resour
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.purchase-order+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -598,7 +598,7 @@ be included in the response to indicate the location of the newly created resour
             Accept: application/json
 
     + Body
-    
+
             {
                 "number": "purchase order number|mandatory",
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
@@ -609,19 +609,19 @@ be included in the response to indicate the location of the newly created resour
                     "name": "vendor name|mandatory"
                     }
             }
-            
+
 
 + Response 201
-    
+
     + Headers
-    
+
             Location: /purchase-orders/{purchaseOrderNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -637,9 +637,9 @@ be included in the response to indicate the location of the newly created resour
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -654,9 +654,9 @@ be included in the response to indicate the location of the newly created resour
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -671,9 +671,9 @@ be included in the response to indicate the location of the newly created resour
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -698,7 +698,7 @@ Provides an ability to update purchase orders.
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.purchase-order+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -707,7 +707,7 @@ Provides an ability to update purchase orders.
             Accept: application/json
 
     + Body
-    
+
             {
                 "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
                 "closed": false,
@@ -716,18 +716,18 @@ Provides an ability to update purchase orders.
                     "name": "vendor name"
                     }
             }
-            
+
 
 + Response 200
-    
+
     + Headers
-    
+
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -742,9 +742,9 @@ Provides an ability to update purchase orders.
             }
 
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -755,14 +755,14 @@ Provides an ability to update purchase orders.
                   "code": "INVALID_DATE_VALUE",
                   "description": "Invalid creation date format.",
                   "field": "creationDate"
-                }              
+                }
                 ]
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -777,9 +777,9 @@ Provides an ability to update purchase orders.
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -794,9 +794,9 @@ Provides an ability to update purchase orders.
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -822,7 +822,7 @@ Provides an ability to access existing purchase orders.
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
             Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
@@ -830,13 +830,13 @@ Provides an ability to access existing purchase orders.
             Accept: application/vnd.garnercorp.purchase-order+json;v=1.0
 
 + Response 200
-    
+
     + Headers
-    
+
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
     + Body
-    
+
             {
                 "number": "purchase order number",
                 "closed": false,
@@ -847,11 +847,11 @@ Provides an ability to access existing purchase orders.
                     "name": "vendor name"
                     }
             }
-            
+
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -866,9 +866,9 @@ Provides an ability to access existing purchase orders.
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -883,9 +883,9 @@ Provides an ability to access existing purchase orders.
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -912,7 +912,7 @@ Provides an ability to create purchase order lines and related material (sku), d
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.purchase-order-line+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -921,7 +921,7 @@ Provides an ability to create purchase order lines and related material (sku), d
             Accept: application/json
 
     + Body
-    
+
             {
                "line": "line number|mandatory|00001, 00002, 10001, 10002, etc",
                "closed": false,
@@ -995,16 +995,16 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 201
-    
+
     + Headers
-    
+
             Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumberd}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1019,9 +1019,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1042,9 +1042,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1059,9 +1059,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1076,9 +1076,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1094,7 +1094,7 @@ Provides an ability to create purchase order lines and related material (sku), d
 
 ### Update a Purchase Order Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
 
-Provides an ability to update purchase order lines and their vendor, packer and freight forwarder statuses. 
+Provides an ability to update purchase order lines and their vendor, packer and freight forwarder statuses.
 
 There is overlap between Shipment API and PO Line API as both contain freight forwarder statuses. Either can be called.
 Use Shipment API if you need to provide shipment information.
@@ -1107,7 +1107,7 @@ Use Shipment API if you need to provide shipment information.
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.purchase-order-line+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -1116,7 +1116,7 @@ Use Shipment API if you need to provide shipment information.
             Accept: application/json
 
     + Body
-    
+
             {
                "closed": false,
                "creationDate": "YYYY-MM-DDThh:mm:ssZ",
@@ -1193,18 +1193,18 @@ Use Shipment API if you need to provide shipment information.
                     }
                 }
             }
-            
+
 
 + Response 200
 
     + Headers
-    
+
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1219,9 +1219,9 @@ Use Shipment API if you need to provide shipment information.
             }
 
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1242,9 +1242,9 @@ Use Shipment API if you need to provide shipment information.
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1259,9 +1259,9 @@ Use Shipment API if you need to provide shipment information.
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1276,9 +1276,9 @@ Use Shipment API if you need to provide shipment information.
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1291,7 +1291,7 @@ Use Shipment API if you need to provide shipment information.
                 }
               ]
             }
-            
+
 
 ### Get a Purchase Order Line - NEW! [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}]
 
@@ -1305,7 +1305,7 @@ Provides an ability to create purchase order lines and related material (sku), d
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
             Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
@@ -1313,13 +1313,13 @@ Provides an ability to create purchase order lines and related material (sku), d
             Accept: application/vnd.garnercorp.purchase-order-line+json;v=1.0
 
 + Response 201
-    
+
     + Headers
-    
+
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
     + Body
-    
+
             {
                "closed": false,
                "creationDate": "YYYY-MM-DDThh:mm:ssZ",
@@ -1393,9 +1393,9 @@ Provides an ability to create purchase order lines and related material (sku), d
 
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1410,9 +1410,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1427,9 +1427,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1444,9 +1444,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1461,9 +1461,9 @@ Provides an ability to create purchase order lines and related material (sku), d
             }
 
 
-## Intermediate Goods Receipt API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
+## Intermediate Goods Receipt Line API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
 
-### Create an Intermediate Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
+### Create an Intermediate Goods Receipt Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/]
 
 Provides an ability to create intermediate (at Packer or Freight Forwarder) goods receipts for specific purchase order lines.
 
@@ -1476,7 +1476,7 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -1485,27 +1485,27 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
             Accept: application/json
 
     + Body
-    
+
             {
                 "receiptNumber": "gr number|mandatory",
                 "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
-                
+
             }
-            
+
 
 + Response 201
-    
+
     + Headers
-    
-            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}
+
+            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{lineNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1519,11 +1519,11 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
               ]
             }
 
-            
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1539,9 +1539,9 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1556,9 +1556,9 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1573,9 +1573,9 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1589,7 +1589,7 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
               ]
             }
 
-### Get an Intermediate Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
+### Get an Intermediate Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{lineNumber}]
 
 Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
@@ -1602,7 +1602,7 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
             Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
@@ -1610,24 +1610,24 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
             Accept: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
 
 + Response 200
-    
+
     + Headers
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
     + Body
-    
+
             {
-                "receiptNumber": "some gr number" 
+                "receiptNumber": "some gr number"
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
-   
+
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1642,9 +1642,9 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1659,9 +1659,9 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1676,9 +1676,9 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1692,7 +1692,7 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
               ]
             }
 
-### Update an Intermediate Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipts/{receiptNumber}]
+### Update an Intermediate Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{lineNumber}]
 
 Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
@@ -1705,7 +1705,7 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.intermediate-goods-receipt+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -1714,24 +1714,24 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             Accept: application/json
 
     + Body
-    
+
             {
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
-            
+
 
 + Response 200
-    
+
     + Headers
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1745,11 +1745,11 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
               ]
             }
 
-    
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1765,9 +1765,9 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1782,9 +1782,9 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1799,9 +1799,9 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1816,9 +1816,9 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
             }
 
 
-## Final Goods Receipt API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
+## Final Goods Receipt API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
-### Create a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/]
+### Create a Final Goods Receipt [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
 Provides an ability to create final (at Warehouse or some other final destination) goods receipts for specific purchase order lines.
 
@@ -1831,7 +1831,7 @@ Provides an ability to create final (at Warehouse or some other final destinatio
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -1840,27 +1840,27 @@ Provides an ability to create final (at Warehouse or some other final destinatio
             Accept: application/json
 
     + Body
-    
+
             {
                 "receiptNumber": "gr number|mandatory",
                 "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
-                
+
             }
-            
+
 
 + Response 201
-    
+
     + Headers
-    
-            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}
+
+            Location: /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{lineNumber}
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1874,11 +1874,11 @@ Provides an ability to create final (at Warehouse or some other final destinatio
               ]
             }
 
-            
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1894,9 +1894,9 @@ Provides an ability to create final (at Warehouse or some other final destinatio
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1911,9 +1911,9 @@ Provides an ability to create final (at Warehouse or some other final destinatio
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1928,9 +1928,9 @@ Provides an ability to create final (at Warehouse or some other final destinatio
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1944,7 +1944,7 @@ Provides an ability to create final (at Warehouse or some other final destinatio
               ]
             }
 
-### Get an Final Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
+### Get an Final Goods Receipt [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{lineNumber}]
 
 Provides an ability to get final (at Warehouse or final destination) goods receipt for specific purchase order lines.
 
@@ -1957,7 +1957,7 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
             Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
@@ -1965,24 +1965,24 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             Accept: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
 
 + Response 200
-    
+
     + Headers
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
 
     + Body
-    
+
             {
-                "receiptNumber": "some gr number" 
+                "receiptNumber": "some gr number"
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
-   
+
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -1997,9 +1997,9 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2014,9 +2014,9 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2031,9 +2031,9 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2048,7 +2048,7 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
             }
 
 
-### Update a Final Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipts/{receiptNumber}]
+### Update a Final Goods Receipt [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{lineNumber}]
 
 Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
 
@@ -2062,7 +2062,7 @@ Provides an ability to update final (warehouse or some other final destination) 
 + Request
 
     + Headers
-    
+
             Authorization: Basic BASE64ENCUSERNAMEANDPASS==
             Content-Type: application/vnd.garnercorp.final-goods-receipt+json;v=1.0
             Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
@@ -2071,24 +2071,24 @@ Provides an ability to update final (warehouse or some other final destination) 
             Accept: application/json
 
     + Body
-    
+
             {
                 "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
-            
+
 
 + Response 200
-    
+
     + Headers
 
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-            
+
 + Response 404
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2102,11 +2102,11 @@ Provides an ability to update final (warehouse or some other final destination) 
               ]
             }
 
-            
+
 + Response 400
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2122,9 +2122,9 @@ Provides an ability to update final (warehouse or some other final destination) 
             }
 
 + Response 401
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2139,9 +2139,9 @@ Provides an ability to update final (warehouse or some other final destination) 
             }
 
 + Response 403
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
@@ -2156,9 +2156,9 @@ Provides an ability to update final (warehouse or some other final destination) 
             }
 
 + Response 500
-    
+
     + Headers
-    
+
             Content-Type: application/vnd.garnercorp.errors+json;v=1.0
             TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
     + Body
