@@ -4,7 +4,17 @@ HOST: https://test.globalcontroltower.com/gct/restful/
 # Global Control Tower (GCT) API
 
 The Global Control Tower API is designed for purchasers, freight forwarders, packers and vendors to provide updates 
-to purchase order shipment data in Global Control Tower (GCT) system.
+to purchase order, po line, shipment data in Global Control Tower (GCT) system.
+
+This API adheres to HTTP 1.1 specification and is "RESTful". https://github.com/vmandrychenko/http-api-guidelines are used for development of this interface. Please refer to the guidelines (https://github.com/vmandrychenko/http-api-guidelines#format) for generic field formats.
+
+Error handling
+==============
+As per HTTP spec:
+* 2xx response status codes indicate success.
+* 3xx response status codes indicate that resource was moved.
+* 4xx response status codes indicate error that was caused by the malformed request. Once the request is fixed, it should be tried again.
+* 5xx response status codes indicate failure on the server side and should not be tried again. Please inform us in case of these failures.
 
 Headers
 =======
