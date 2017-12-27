@@ -1489,12 +1489,13 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
     + Body
 
             {
-                "receiptNumber": "gr number|mandatory",
-                "line": "gr line number|mandatory"
-                "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
+                "goodsReceipt": {
+                    "number": "some gr number|mandatory",
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date|mandatory"
+                },
+                "line": "gr line number|mandatory",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
-
             }
 
 
@@ -1622,10 +1623,11 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
     + Body
 
             {
-                "receiptNumber": "some gr number"
-                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "goodsReceipt": {
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date|mandatory"
+                },
                 "quantity": 12.5,
-                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
+                "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
             }
 
 + Response 404
@@ -1721,9 +1723,11 @@ Provides an ability to update intermediate (at Packer or Freight Forwarder) good
     + Body
 
             {
-                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "goodsReceipt": {
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date"
+                },
                 "quantity": 12.5,
-                "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
+                "quantityUnit": "kg, each, etc"
             }
 
 
@@ -1849,12 +1853,13 @@ Provides an ability to create final (at Warehouse or some other final destinatio
     + Body
 
             {
-                "receiptNumber": "gr number|mandatory",
+                "goodsReceipt": {
+                    "number": "some gr number|mandatory",
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date|mandatory"
+                },
                 "line": "gr line number|mandatory",
-                "date": "YYYY-MM-DDThh:mm:ssZ|mandatory|goods receipt date",
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
-
             }
 
 
@@ -1982,8 +1987,10 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
     + Body
 
             {
-                "receiptNumber": "some gr number"
-                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "goodsReceipt": {
+                    "number": "some gr number",
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date"
+                },
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
@@ -2083,7 +2090,9 @@ Provides an ability to update final (warehouse or some other final destination) 
     + Body
 
             {
-                "date": "YYYY-MM-DDThh:mm:ssZ|goods receipt date",
+                "goodsReceipt":{
+                    "date": "YYYY-MM-DDThh:mm:ss|goods receipt date"
+                },
                 "quantity": 12.5,
                 "quantityUnit": "kg, each, etc|negative quantity: eg. -12.5 represents reversal"
             }
