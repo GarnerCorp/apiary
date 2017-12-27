@@ -6,7 +6,39 @@ HOST: https://test.globalcontroltower.com/gct/restful/
 The Global Control Tower API is designed for purchasers, freight forwarders, packers and vendors to provide updates
 to purchase order, po line, shipment data in Global Control Tower (GCT) system.
 
+HTTP 1.1
+-----------
 This API adheres to HTTP 1.1 specification and is "RESTful". https://github.com/vmandrychenko/http-api-guidelines are used for development of this interface. Please refer to the guidelines (https://github.com/vmandrychenko/http-api-guidelines#format) for generic field formats.
+
+Http Methods
+---------
+* To create a resource, use `POST`
+* To update a resource, use `PUT` on the URI (identifier must be in the URI).
+* To fetch/get a resource, use `GET`, just like an Update, identifier must be in the URI. 
+    * in cases where applicable, if no identifier is provided in the URI you can fetch entire collection anf filter it using query parameters.
+* To delete a resource, use `DELETE` (this is rarely applicable).
+
+If you are not sure if you need to create or update a resource, perform a `GET` on the resource first to see if it's in the system.
+If `GET` results in `404` HTTP status you can create a resource or otherwise update it.
+
+If you are trying to create a resource that is already in the system, you will get a `400` HTTP status code informing you that resource already exists. 
+
+
+Overall flow of information
+---------
+Everything starts with Purchase Order:
+* First you create PO Header, 1 PO per HTTP call - `POST`
+* Then you can create Lines for newly created PO Header - 1 line per HTTP call - `POST`.
+* To get currect PO Header info use `GET`
+* To update PO Header Info use `PUT`
+* You can fetch and update individual lines once they are created.
+
+Once PO and lines are in the system, shipment and shipment statuses can be created/updated:
+* Create a shipment and specify po lines that are included in the shipment.
+* Once shipment is created, you can update the shipment info.
+* To update any of the vendor/packer/shipment statuses for specific PO Line use "Update PO Line". Please do this for each line individually using separate HTTP calls. Don't use "Update Shipment" to update statuses.
+* Once the PO Lines are created, you can create Intermediate (at packer/freight forwarder) and Final (at warehouse) Goods Receipt Lines.
+* You can update and get Intermediate and Final Goods Receipts as well.
 
 Response codes and error handling
 ==============
@@ -563,23 +595,6 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
 
 This series of endpoints provide ability to create, update and retreive purchase orders. Purchase orders
 will be created separately from enclising Purchase Order Lines.
-
-The Flow
-==========
-Typical flow to create Purchase Orders, their lines and later process Goods Receipts would look like this:
-* Firs you create PO Header, 1 PO per HTTP call - `POST`
-* Then you can create Lines for newly created PO Header - 1 line per HTTP call - `POST`.
-* To get currect PO Header info - `GET`
-* To update PO Header Info - `PUT`
-* To get currect PO Line info - `GET`
-* To update Line Info or any of the vendor/packer/shipment statuses for specific line - `PUT`
-* Then you can create Intermediate Goods Receipt - 1 GR Line per call - `POST`
-* To get Intermediate Goods Receipt - `GET`
-* To update Intermediate Goods Receipt - `PUT`
-* Same logic applies to Final Goods Receipts
-
-Pay attention to payload format: https://globalcontroltower.docs.apiary.io/#introduction/payload-format-and-fields
-
 
 ### Create a Purchase Order [POST /purchase-orders/]
 
