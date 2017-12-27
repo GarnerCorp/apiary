@@ -153,6 +153,13 @@ IP Address
 ==============
 Global Control tower IP address may change without notice. Please rely on DNS for current IP resolution.
 
+FAQ
+=============
+* Can API accept many POs, Lines or other resources in the same call. Can I pass a collection during a `POST` or a `PUT`.
+    * The answer is a NO. Primary reason for this is error handling. Let's say you wanted to update two
+    PO Lines in one call but one of them was invalid; in this case the response cannot be a `2xx` - SUCCESS, it's not a success, or a `4xx` - FAILURE as it is 
+    only a partial failure. HTTP does not really support cases like this. Error handling and retry functionality are also much easier to do when you have to handle individual errors.  
+
 Contact
 =======
 For more information about API don't hesitate to send an email to Vlad Mandrychenko (Director, vlad.mandrychenko@garnercorp.com).
