@@ -24,7 +24,7 @@ If `GET` results in `404` HTTP status you can create a resource or otherwise upd
 If you are trying to create a resource that is already in the system, you will get a `400` HTTP status code informing you that resource already exists. 
 
 Overall flow of information
----------
+==============
 Everything starts with Purchase Order:
 * First you create PO Header, 1 PO per HTTP call - `POST`
 * Then you can create Lines for newly created PO Header - 1 line per HTTP call - `POST`.
