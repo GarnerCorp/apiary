@@ -1495,7 +1495,7 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
                 },
                 "line": "gr line number|mandatory",
                 "quantity": 12.5,
-                "quantityUnit": "kg, each, etc|quantity and unit is mandatory"
+                "quantityUnit": "kg, each, etc|-12.5, negative represents reversal/return|quantity and unit is mandatory"
             }
 
 
@@ -1595,7 +1595,9 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
 
 ### Get an Intermediate Goods Receipt Line [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
-Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
+Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines. 
+
+Goods Receipt Line is identified in the URI by receipt number and line number that is dash separated (example: 123456-00001)
 
 + Parameters
 
@@ -1701,6 +1703,8 @@ Provides an ability to get intermediate (at Packer or Freight Forwarder) goods r
 ### Update an Intermediate Goods Receipt Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to update intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
+
+Goods Receipt Line is identified in the URI by receipt number and line number that is dash separated (example: 123456-00001)
 
 + Parameters
 
@@ -1961,6 +1965,8 @@ Provides an ability to create final (at Warehouse or some other final destinatio
 
 Provides an ability to get final (at Warehouse or final destination) goods receipt for specific purchase order lines.
 
+Goods Receipt Line is identified in the URI by receipt number and line number that is dash separated (example: 123456-00001)
+
 + Parameters
 
     + purchaseOrderNumber (string) - Purchase order number.
@@ -2067,6 +2073,8 @@ Provides an ability to get final (at Warehouse or final destination) goods recei
 ### Update a Final Goods Receipt Line [PUT /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
 Provides an ability to update final (warehouse or some other final destination) goods receipts for specific purchase order lines.
+
+Goods Receipt Line is identified in the URI by receipt number and line number that is dash separated (example: 123456-00001)
 
 + Parameters
 
