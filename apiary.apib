@@ -157,438 +157,6 @@ Contact
 =======
 For more information about API don't hesitate to send an email to Vlad Mandrychenko (Director, vlad.mandrychenko@garnercorp.com).
 
-## Shipments API [/freight-forwarder-shipments]
-
-Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.
-
-Shipments API allows you to create and update shipment information and a list of purchase order line items on the shipment.
-
-**It is highly recommended that you use the "Update Purchase Order Line API" to provide line item updates and their status updates.
-Line item status updates (not list of line items) through Shipments API is deprecated as of June 14, 2017 and will be removed in the future once everyone stops using it.**
-
-### Create a Shipment [POST]
-
-Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
-Use the shipmentNumber to make subsequent updates using HTTP PUT.
-
-All Purchase Orders and Line Items that are being shipped must be present when the shipment is created.
-
-We understand that data accuracy will not be at 100% and therefore we built in fault tolerance for erroneous po lines.
-* All po lines valid - 201 response
-* Some po lines valid - 201 response with list of errors with response
-* No po lines valid - 400 response with list of errors in the response
-
-For any other errors you will continue getting 400 response that will have to be corrected on your end.
-
-+ Request
-
-    + Headers
-
-            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
-            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
-            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
-            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
-            User-Agent: Your-Http-Client-Name/Version.Number
-            Accept: application/json
-
-    + Body
-
-            {
-               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
-               "packingListNumber":"some number as string",
-               "isBreakBulk":false,
-               "breakBulkWeight":45.4,
-               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
-               "numberOfBreakBulkPieces":3,
-               "numberOfContainers":1,
-               "numberOfPackages":34,
-               "weight":4500.45,
-               "weightUnit":"kg",
-               "volume":554.3,
-               "volumeUnit":"SCM",
-               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
-               "preAlertNumber":"some number as string",
-               "masterAirwayBill":"some bill",
-               "houseAirwayBill":"some bill",
-               "flightNumber":"XX134, deprecated (use flightOrVoyageNumber instead)",
-               "flightOrVoyageNumber":"XX134",
-               "carrier":"some carrier",
-               "originPort":"some port",
-               "destinationPort":"some port",
-               "intermediaryWarehouseName": "some intermediary warehouse",
-               "vesselName": "some vessel name",
-               "purchaseOrders":[
-                  {
-                     "purchaseOrderNumber":"|mandatory|some po number as string",
-                     "vendorName":"some vendor name, deprecated (use Po Line Update instead)",
-                     "purchaseOrderLines":[
-                        {
-                           "purchaseOrderLine":"|mandatory|00001",
-                           "quantity":12.5,
-                           "quantityUnit":"kg, deprecated along with quantity(use Po Line Update instead)",
-                           "quantityShipped":12.5,
-                           "quantityShippedUnit":"kg, deprecated along with quantityShipped (use Po Line Update instead)",
-                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "preAlertDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "countries": {
-                                "TD": {
-                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)"
-                                }
-                            }
-                        },
-                        {
-                           "purchaseOrderLine":"|mandatory|00002"
-                        }
-                     ]
-                  }
-               ]
-            }
-
-
-+ Response 201
-
-    + Headers
-
-            Location: /freight-forwarder-shipments/{shipmentNumber}
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-
-
-+ Response 201
-
-    + Headers
-
-            Location: /freight-forwarder-shipments/{shipmentNumber}
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "PO_LINE_NOT_FOUND",
-                  "description": "Po Line 4501001010 - 00002 not found"
-                },
-                {
-                  "code": "PO_LINE_NOT_FOUND",
-                  "description": "Po Line 4501001340 - 10401 not found"
-                }
-              ]
-            }
-
-+ Response 400
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "INVALID_DATE_VALUE",
-                  "description": "Invalid packingCompleteDate date format.",
-                  "field": "packingCompleteDate"
-                },
-                {
-                  "code": "INVALID_MODE_OF_TRANSPORT",
-                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
-                  "field": "modeOfTransportCode"
-                }
-              ]
-            }
-
-+ Response 401
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "UNAUTHORIZED",
-                  "description": "Username/password provided in Authorization header is invalid."
-                }
-              ]
-            }
-
-+ Response 403
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "WRITE_ACCESS_NOT_ALLOWED",
-                  "description": "You are authorized for read access only."
-                }
-              ]
-            }
-
-+ Response 500
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "INTERNAL_SERVER_ERROR",
-                  "description": "Unhandled error happaned on the server side, do not retry."
-                }
-              ]
-            }
-
-
-### Update a Shipment [PUT /freight-forwarder-shipments/{shipmentNumber}]
-
-Update a shipment using shipmentNumber as URI identifier. The shipmentNumber is provided to you in the Create Shipment response Location header.
-
-All Purchase Orders and Line Items must be present if any of the shipment information is updated.
-
-+ Parameters
-
-    + shipmentNumber (string) - URI identifier of the shipment, this is GCT shipmentNumber that is provided upon successful GCT shipment creation (HTTP POST) as response Location header value.
-
-
-+ Request
-
-    + Headers
-
-            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
-            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
-            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
-            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
-            User-Agent: Your-Http-Client-Name/Version.Number
-            Accept: application/json
-
-    + Body
-
-            {
-               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
-               "packingListNumber":"some number as string",
-               "isBreakBulk":false,
-               "breakBulkWeight":45.4,
-               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
-               "numberOfBreakBulkPieces":3,
-               "numberOfContainers":1,
-               "numberOfPackages":34,
-               "weight":4500.45,
-               "weightUnit":"kg",
-               "volume":554.3,
-               "volumeUnit":"SCM",
-               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
-               "preAlertNumber":"some number as string",
-               "masterAirwayBill":"some bill",
-               "houseAirwayBill":"some bill",
-               "flightNumber":"XX134, deprecated (use flightOrVoyageNumber instead)",
-               "flightOrVoyageNumber":"XX134",
-               "carrier":"some carrier",
-               "originPort":"some port",
-               "destinationPort":"some port",
-               "intermediaryWarehouseName": "some intermediary warehouse",
-               "vesselName": "some vessel name",
-               "purchaseOrders":[
-                  {
-                     "purchaseOrderNumber":"|mandatory|some po number as string",
-                     "vendorName":"some vendor name, deprecated (use Po Line Update instead)",
-                     "purchaseOrderLines":[
-                        {
-                           "purchaseOrderLine":"|mandatory|00001",
-                           "quantity":12.5,
-                           "quantityUnit":"kg, deprecated along with quantity(use Po Line Update instead)",
-                           "quantityShipped":12.5,
-                           "quantityShippedUnit":"kg, deprecated along with quantityShipped (use Po Line Update instead)",
-                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "preAlertDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                           "countries": {
-                                "TD": {
-                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
-                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)"
-                                }
-                            }
-                        },
-                        {
-                           "purchaseOrderLine":"|mandatory|00002"
-                        }
-                     ]
-                  }
-               ]
-            }
-
-
-+ Response 200
-
-    + Headers
-
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "PO_LINE_NOT_FOUND",
-                  "description": "Po Line 4501001010 - 00002 not found"
-                },
-                {
-                  "code": "PO_LINE_NOT_FOUND",
-                  "description": "Po Line 4501001340 - 10401 not found"
-                }
-              ]
-            }
-
-+ Response 404
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "SHIPMENT_NOT_FOUND",
-                  "description": "Shipment with shipment number '123456' not found."
-                }
-              ]
-            }
-
-+ Response 400
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "INVALID_DATE_VALUE",
-                  "description": "Invalid packingCompleteDate date format.",
-                  "field": "packingCompleteDate"
-                },
-                {
-                  "code": "INVALID_MODE_OF_TRANSPORT",
-                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
-                  "field": "modeOfTransportCode"
-                }
-              ]
-            }
-
-+ Response 401
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "UNAUTHORIZED",
-                  "description": "Username/password provided in Authorization header is invalid."
-                }
-              ]
-            }
-
-+ Response 403
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "WRITE_ACCESS_NOT_ALLOWED",
-                  "description": "You are authorized for read access only."
-                }
-              ]
-            }
-
-+ Response 500
-
-    + Headers
-
-            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
-            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
-    + Body
-
-            {
-              "errors": [
-                {
-                  "code": "INTERNAL_SERVER_ERROR",
-                  "description": "Unhandled error happened on the server side, do not retry."
-                }
-              ]
-            }
 
 ## Purchase Order API - NEW! [/purchase-orders/]
 
@@ -1452,6 +1020,439 @@ Provides an ability to create purchase order lines and related material (sku), d
               "errors": [
                 {
                   "code": "READ_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happened on the server side, do not retry."
+                }
+              ]
+            }
+
+## Shipments API [/freight-forwarder-shipments]
+
+Shipments represent a collection of shipments stored in GCT. Each shipment in the collection is identified via shipmentNumber.
+
+Shipments API allows you to create and update shipment information and a list of purchase order line items on the shipment.
+
+**It is highly recommended that you use the "Update Purchase Order Line API" to provide line item updates and their status updates.
+Line item status updates (not list of line items) through Shipments API is deprecated as of June 14, 2017 and will be removed in the future once everyone stops using it.**
+
+### Create a Shipment [POST]
+
+Create a new shipment in the Global Control Tower system. A shipmentNumber will be provided in the HTTP response Location header after successful shipment creation.
+Use the shipmentNumber to make subsequent updates using HTTP PUT.
+
+All Purchase Orders and Line Items that are being shipped must be present when the shipment is created.
+
+We understand that data accuracy will not be at 100% and therefore we built in fault tolerance for erroneous po lines.
+* All po lines valid - 201 response
+* Some po lines valid - 201 response with list of errors with response
+* No po lines valid - 400 response with list of errors in the response
+
+For any other errors you will continue getting 400 response that will have to be corrected on your end.
+
++ Request
+
+    + Headers
+
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+
+            {
+               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
+               "packingListNumber":"some number as string",
+               "isBreakBulk":false,
+               "breakBulkWeight":45.4,
+               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
+               "numberOfBreakBulkPieces":3,
+               "numberOfContainers":1,
+               "numberOfPackages":34,
+               "weight":4500.45,
+               "weightUnit":"kg",
+               "volume":554.3,
+               "volumeUnit":"SCM",
+               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+               "preAlertNumber":"some number as string",
+               "masterAirwayBill":"some bill",
+               "houseAirwayBill":"some bill",
+               "flightNumber":"XX134, deprecated (use flightOrVoyageNumber instead)",
+               "flightOrVoyageNumber":"XX134",
+               "carrier":"some carrier",
+               "originPort":"some port",
+               "destinationPort":"some port",
+               "intermediaryWarehouseName": "some intermediary warehouse",
+               "vesselName": "some vessel name",
+               "purchaseOrders":[
+                  {
+                     "purchaseOrderNumber":"|mandatory|some po number as string",
+                     "vendorName":"some vendor name, deprecated (use Po Line Update instead)",
+                     "purchaseOrderLines":[
+                        {
+                           "purchaseOrderLine":"|mandatory|00001",
+                           "quantity":12.5,
+                           "quantityUnit":"kg, deprecated along with quantity(use Po Line Update instead)",
+                           "quantityShipped":12.5,
+                           "quantityShippedUnit":"kg, deprecated along with quantityShipped (use Po Line Update instead)",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "countries": {
+                                "TD": {
+                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)"
+                                }
+                            }
+                        },
+                        {
+                           "purchaseOrderLine":"|mandatory|00002"
+                        }
+                     ]
+                  }
+               ]
+            }
+
+
++ Response 201
+
+    + Headers
+
+            Location: /freight-forwarder-shipments/{shipmentNumber}
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+
++ Response 201
+
+    + Headers
+
+            Location: /freight-forwarder-shipments/{shipmentNumber}
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                },
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001340 - 10401 not found"
+                }
+              ]
+            }
+
++ Response 400
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_MODE_OF_TRANSPORT",
+                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+                  "field": "modeOfTransportCode"
+                }
+              ]
+            }
+
++ Response 401
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
+                  "description": "You are authorized for read access only."
+                }
+              ]
+            }
+
++ Response 500
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INTERNAL_SERVER_ERROR",
+                  "description": "Unhandled error happaned on the server side, do not retry."
+                }
+              ]
+            }
+
+
+### Update a Shipment [PUT /freight-forwarder-shipments/{shipmentNumber}]
+
+Update a shipment using shipmentNumber as URI identifier. The shipmentNumber is provided to you in the Create Shipment response Location header.
+
+All Purchase Orders and Line Items must be present if any of the shipment information is updated.
+
++ Parameters
+
+    + shipmentNumber (string) - URI identifier of the shipment, this is GCT shipmentNumber that is provided upon successful GCT shipment creation (HTTP POST) as response Location header value.
+
+
++ Request
+
+    + Headers
+
+            Authorization: Basic BASE64ENCUSERNAMEANDPASS==
+            Content-Type: application/vnd.garnercorp.shipment+json;v=1.0
+            Host: same as in URI, test.globalcontroltower.com or www.globalcontroltower.com
+            Referer: same as in URI, https://test.globalcontroltower.com or https://www.globalcontroltower.com
+            User-Agent: Your-Http-Client-Name/Version.Number
+            Accept: application/json
+
+    + Body
+
+            {
+               "shipmentNumber": "|mandatory|freight forwarder shipment number/reference",
+               "packingListNumber":"some number as string",
+               "isBreakBulk":false,
+               "breakBulkWeight":45.4,
+               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
+               "numberOfBreakBulkPieces":3,
+               "numberOfContainers":1,
+               "numberOfPackages":34,
+               "weight":4500.45,
+               "weightUnit":"kg",
+               "volume":554.3,
+               "volumeUnit":"SCM",
+               "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+               "preAlertNumber":"some number as string",
+               "masterAirwayBill":"some bill",
+               "houseAirwayBill":"some bill",
+               "flightNumber":"XX134, deprecated (use flightOrVoyageNumber instead)",
+               "flightOrVoyageNumber":"XX134",
+               "carrier":"some carrier",
+               "originPort":"some port",
+               "destinationPort":"some port",
+               "intermediaryWarehouseName": "some intermediary warehouse",
+               "vesselName": "some vessel name",
+               "purchaseOrders":[
+                  {
+                     "purchaseOrderNumber":"|mandatory|some po number as string",
+                     "vendorName":"some vendor name, deprecated (use Po Line Update instead)",
+                     "purchaseOrderLines":[
+                        {
+                           "purchaseOrderLine":"|mandatory|00001",
+                           "quantity":12.5,
+                           "quantityUnit":"kg, deprecated along with quantity(use Po Line Update instead)",
+                           "quantityShipped":12.5,
+                           "quantityShippedUnit":"kg, deprecated along with quantityShipped (use Po Line Update instead)",
+                           "packingCompleteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "packingListReceivedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "goodsCollectedFromPackerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "materialReceiptDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "deliveredToCarrierDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "preAlertDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimatedTimeOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDateOfDeparturePortOfLoading":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimatedTimeOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDateOfArrivalPortOfDestination":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "documentsSentToCustomerDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "documentsSentToCustoms":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "customsStartedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "customsClearedDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "readyToDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "actualDispatchDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "deliveredToSiteDate":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "estimateDateOfDeliveryAtSite":"YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "bookedWithCarrierDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "agricultureQuarantineCleared": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "intermediaryWarehouseArrivalDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "intermediaryWarehouseDepartureDate": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                           "countries": {
+                                "TD": {
+                                "dispatchedFromPortToP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "arrivedAtP2": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "dispatchedFromP2ToP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "arrivedAtP4": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "dispatchedFromP4ToKome": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "cameroonCustomsClearanceComplete": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)",
+                                "cameroonCustomsDirectRelease": "YYYY-MM-DDThh:mm:ss, deprecated (use Po Line Update instead)"
+                                }
+                            }
+                        },
+                        {
+                           "purchaseOrderLine":"|mandatory|00002"
+                        }
+                     ]
+                  }
+               ]
+            }
+
+
++ Response 200
+
+    + Headers
+
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001010 - 00002 not found"
+                },
+                {
+                  "code": "PO_LINE_NOT_FOUND",
+                  "description": "Po Line 4501001340 - 10401 not found"
+                }
+              ]
+            }
+
++ Response 404
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "SHIPMENT_NOT_FOUND",
+                  "description": "Shipment with shipment number '123456' not found."
+                }
+              ]
+            }
+
++ Response 400
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "INVALID_DATE_VALUE",
+                  "description": "Invalid packingCompleteDate date format.",
+                  "field": "packingCompleteDate"
+                },
+                {
+                  "code": "INVALID_MODE_OF_TRANSPORT",
+                  "description": "Invalid modeOfTransportCode 'airplane'. Valid values are: airfreight|land|truck|combo|seafreight|courier|handcarry|other",
+                  "field": "modeOfTransportCode"
+                }
+              ]
+            }
+
++ Response 401
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "UNAUTHORIZED",
+                  "description": "Username/password provided in Authorization header is invalid."
+                }
+              ]
+            }
+
++ Response 403
+
+    + Headers
+
+            Content-Type: application/vnd.garnercorp.errors+json;v=1.0
+            TraceId: UUID-FOR-TROUBLESHOOTING-PURPOSE
+    + Body
+
+            {
+              "errors": [
+                {
+                  "code": "WRITE_ACCESS_NOT_ALLOWED",
                   "description": "You are authorized for read access only."
                 }
               ]
