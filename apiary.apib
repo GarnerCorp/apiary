@@ -195,7 +195,7 @@ be included in the response to indicate the location of the newly created resour
             {
                 "number": "purchase order number|mandatory",
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ|mandatory",
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "issuedDate": "YYYY-MM-DDThh:mm:ssZ",
                 "closed": false,
                 "vendor": {
                     "code": "vendor code|mandatory",
@@ -302,7 +302,7 @@ Provides an ability to update purchase orders.
     + Body
 
             {
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "issuedDate": "YYYY-MM-DDThh:mm:ssZ",
                 "closed": false,
                 "vendor": {
                     "code": "vendor code",
@@ -434,7 +434,7 @@ Provides an ability to access existing purchase orders.
                 "number": "purchase order number",
                 "closed": false,
                 "creationDate": "YYYY-MM-DDThh:mm:ssZ",
-                "approvedDate": "YYYY-MM-DDThh:mm:ssZ",
+                "issuedDate": "YYYY-MM-DDThh:mm:ssZ",
                 "vendor": {
                     "code": "vendor code",
                     "name": "vendor name"
