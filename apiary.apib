@@ -136,6 +136,15 @@ Country specific fields
 =======================
 Country specific fields are fields that are valid only for a country or more but not others. Country specific fields are under `countries`/`countryCode` in the JSON message, e.g. `countries`/`TD`.
 
+Units
+============
+When we say units we mean kilograms, tons, cubic feet, etc
+Control Tower system accepts units in addition to quanity as any string and will use units for display purposes only.
+There is no unit conversion done at any time. All the delivery checks are done against quanity only.
+
+If purchase order line is for 10 meters of pipe and goods receipt issued is for 10 feet of pipe,
+control tower will ignore feet and will mark item as delivered. 
+
 Status Dates
 ============
 
