@@ -14,21 +14,21 @@ Http Methods
 ---------
 * To create a resource, use `POST`
 * To update a resource, use `PUT` on the URI (identifier must be in the URI).
-* To fetch/get a resource, use `GET`, just like an Update, identifier must be in the URI. 
+* To fetch/get a resource, use `GET`, just like an Update, identifier must be in the URI.
     * in cases where applicable, if no identifier is provided in the URI you can fetch entire collection anf filter it using query parameters.
 * To delete a resource, use `DELETE` (this is rarely applicable).
 
 If you are not sure if you need to create or update a resource, perform a `GET` on the resource first to see if it's in the system.
 If `GET` results in `404` HTTP status you can create a resource or otherwise update it.
 
-If you are trying to create a resource that is already in the system, you will get a `400` HTTP status code informing you that resource already exists. 
+If you are trying to create a resource that is already in the system, you will get a `400` HTTP status code informing you that resource already exists.
 
 Overall flow of information
 ==============
 Everything starts with Purchase Order:
 * First you create PO Header, 1 PO per HTTP call - `POST`
 * Then you can create Lines for newly created PO Header - 1 line per HTTP call - `POST`.
-* To get currect PO Header info use `GET`
+* To get PO Header info use `GET`
 * To update PO Header Info use `PUT`
 * You can fetch and update individual lines once they are created.
 
@@ -55,7 +55,7 @@ API requires number of mandatory headers to be sent with every request:
 * `Host:` the hostname of the server where the call is made to, like test.globalcontroltower.com or www.globalcontroltower.com
 * `Referer:` protocol + hostname combination, https://test.globalcontroltower.com or https://www.globalcontroltower.com
 * `User-Agent:` the user agent header is used to describe the HTTP client (request sender tool, etc) that is used to create HTTP request. Most off the shelf HTTP clients will populate User-Agent, if you are writing custom HTTP client you can call it anything you want as long as it represents your tool in a unique way.
-* `Content-Type:` rused to represent a media type of the content, text/html or application/vnd-foo-bar+json, etc.
+* `Content-Type:` used to represent a media type of the content, text/html or application/vnd-foo-bar+json, etc.
 * `Accept:` used for content negotiation, you can specify to the server if you are would like to receive specific content media type in the response. This is primarily used for API versioning, see further paragraph on Content Negotiation.
 
 Authentication
@@ -106,7 +106,7 @@ We will make API updates once this changes and will inform users via email.
 
 Payload Format and Fields
 ==========================
-APIs are written in a way to support wide variaty of formats (JSON, XML, CSV, etc), but the only format that is currently supported for request and response is JSON (https://www.json.org/)
+APIs are written in a way to support wide variety of formats (JSON, XML, CSV, etc), but the only format that is currently supported for request and response is JSON (https://www.json.org/)
 
 In order to find out what fields and types are required/supported, please take a look at the request "body" provided on the right hand side once you click on specific endpoint in this doc. If the field in the body is `integer`, field type is JSON integer.
 Strings will be `string` fields in the body and will also contain mandatory note and description right in the example.
@@ -119,13 +119,13 @@ When it comes to string sizes, the allowed maximums are not specified but they a
 For example if you pass a vendor code that is 700 characters in size, that is considered unreasonable, but having the 100 character vendor name or under 500 character material description is totally reasonable.
 If you send a reasonable data that exceeds our limits, please let us know immediately and we will increase field size.
 
-Body samples contain all of the fields that are mandatory or ortherwise optional in the real payload.
+Body samples contain all of the fields that are mandatory or otherwise optional in the real payload.
 
 Mandatory fields
 ----------------------
-Mandatory fields will be marked "|mandatory|" in the bopdy provided.
+Mandatory fields will be marked "|mandatory|" in the body provided.
 For all optional string fields omitting the key/value line or sending value as ""(empty string), the value
-will be ignored, we will not store it. It highly recommended that you avoid ommitting the key/value line
+will be ignored, we will not store it. It highly recommended that you avoid omitting the key/value line
 and send the key along with ""(empty string) so that troubleshooting is easier on both sides.
 
 Encoding
@@ -143,7 +143,7 @@ Control Tower system accepts units in addition to quantity as any `string` and w
 There is no unit conversion done at any time. All the delivery checks are done against quantity only.
 
 That means that if purchase order line is for 10 meters of pipe and goods receipt issued is for 10 feet of pipe,
-control tower will ignore feet as units and will mark item as delivered. 
+control tower will ignore feet as units and will mark item as delivered.
 
 Status Dates
 ============
@@ -155,7 +155,7 @@ Historical Data
 If you need to provide historical data dump it can be done through API:
 * Iterate through every item in the data dump and make HTTP calls to the API
 * For every shipment make a call to Shipment API sending all the POs + lines that are on that shipment. For convenience all status updates for every line can be done separately through Update PO Line API that contain Vendor and Packer statuses in addition to Freight Forwarder statuses.
-* Do not make parallel HTTP requests to avoid server overload and to ensure data consistency if there is interdepency between the calls.
+* Do not make parallel HTTP requests to avoid server overload and to ensure data consistency if there is interdependency between the calls.
 * Log all the non 2XX responses for troubleshooting purposes.
 
 IP Address
@@ -170,8 +170,8 @@ FAQ
 =============
 * Can API accept many POs, Lines or other resources in the same call? Can I pass a collection during a `POST` or a `PUT`?
     * The answer is a NO. Primary reason for this is error handling. Let's say you wanted to update two
-    PO Lines in one call but one of them was invalid; in this case the response cannot be a `2xx` - SUCCESS, it's not a success, or a `4xx` - FAILURE as it is 
-    only a partial failure. HTTP does not really support cases like this. Error handling and retry functionality are also much easier to do when you have to handle individual errors. 
+    PO Lines in one call but one of them was invalid; in this case the response cannot be a `2xx` - SUCCESS, it's not a success, or a `4xx` - FAILURE as it is
+    only a partial failure. HTTP does not really support cases like this. Error handling and retry functionality are also much easier to do when you have to handle individual errors.
 
 Contact
 =======
@@ -180,8 +180,8 @@ For more information about API don't hesitate to send an email to Vlad Mandryche
 
 ## Purchase Order API - NEW! [/purchase-orders/]
 
-This series of endpoints provide ability to create, update and retreive purchase orders. Purchase orders
-will be created separately from enclising Purchase Order Lines.
+This series of endpoints provide ability to create, update and retrieve purchase orders. Purchase orders
+will be created separately from enclosing Purchase Order Lines.
 
 ### Create a Purchase Order [POST /purchase-orders/]
 
@@ -1506,7 +1506,7 @@ All Purchase Orders and Line Items must be present if any of the shipment inform
 
 ## Intermediate Goods Receipt Line API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/]
 
-We are not going to have an API for maintaining goods receipt headers, goods receipt header information (ie number) will be included with goods receipt line info. 
+We are not going to have an API for maintaining goods receipt headers, goods receipt header information (ie number) will be included with goods receipt line info.
 
 ### Create an Intermediate Goods Receipt Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/]
 
@@ -1638,7 +1638,7 @@ Provides an ability to create intermediate (at Packer or Freight Forwarder) good
 
 ### Get an Intermediate Goods Receipt Line [GET /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/intermediate-goods-receipt-lines/{receiptNumber}-{goodsReceiptLineNumber}]
 
-Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines. 
+Provides an ability to get intermediate (at Packer or Freight Forwarder) goods receipt for specific purchase order lines.
 
 Goods Receipt Line is identified in the URI by receipt number and line number that is dash separated (example: 123456-00001)
 
@@ -1874,7 +1874,7 @@ Goods Receipt Line is identified in the URI by receipt number and line number th
 
 ## Final Goods Receipt Line API - NEW! [/purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
-We are not planning to have a separate API for goods receipt header. Header info will be inclided with line info (ie, gr number)
+We are not planning to have a separate API for goods receipt header. Header info will be included with line info (ie, gr number)
 
 ### Create a Final Goods Receipt Line [POST /purchase-orders/{purchaseOrderNumber}/lines/{lineNumber}/final-goods-receipt-lines/]
 
