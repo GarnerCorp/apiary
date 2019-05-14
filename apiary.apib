@@ -145,7 +145,7 @@ There is no unit conversion done at any time. All the delivery checks are done a
 That means that if purchase order line is for 10 meters of pipe and goods receipt issued is for 10 feet of pipe,
 control tower will ignore feet as units and will mark item as delivered.
 
-For a list of units, please see: https://globalcontroltower.com/gct/logistics/gct/document/Units.xlsx
+For a list of units (use abbreviation column), please see: https://globalcontroltower.com/gct/logistics/gct/document/Units.xlsx
 
 Port Codes
 ============
@@ -224,20 +224,14 @@ Use Shipment API if you need to provide shipment information.
                },
                "quantities": {
                   "quantity": 12.5,
-                  "quantityUnit": "kg",
+                  "quantityUnit": "kg | see Units section for a list",
                   "quantityShipped": 12.5,
-                  "quantityShippedUnit": "kg"
+                  "quantityShippedUnit": "kg | see Units section for a list"
                },
                "price": {
                   "grossPrice": 1299,
                   "grossPriceCurrency": "USD| default is USD"
                },
-               "quantities": {
-                    "quantity": 12.5,
-                    "quantityUnit": "kg",
-                    "quantityShipped": 12.5,
-                    "quantityShippedUnit": "kg"
-                },
                 "vendor": {
                     "vendorAcknowledgedDate": "YYYY-MM-DDThh:mm:ss",
                     "estimatedReadyDate": "YYYY-MM-DDThh:mm:ss",
@@ -440,12 +434,12 @@ For any other errors you will continue getting 400 response that will have to be
                "packingListNumber":"some number as string",
                "isBreakBulk":false,
                "breakBulkWeight":45.4,
-               "breakBulkWeightUnit":"kg, ask for list of available unit abbreviations",
+               "breakBulkWeightUnit":"kg | see Units section for a list",
                "numberOfBreakBulkPieces":3,
                "numberOfContainers":1,
                "numberOfPackages":34,
                "weight":4500.45,
-               "weightUnit":"kg",
+               "weightUnit":"kg | see Units section for a list",
                "volume":554.3,
                "volumeUnit":"SCM",
                "modeOfTransportCode":"airfreight|land|truck|combo|seafreight|courier|handcarry|other",
